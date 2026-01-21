@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class BottomModels extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('bottommodels', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('topmodel_id')->unsigned()->index();
+            $table->string('model');             
+            $table->enum('active', [0, 1])->default(0);            
+            $table->timestamps();                              
+        }); 
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+       Schema::dropIfExists('bottommodels');        
+    }
+}

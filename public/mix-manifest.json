@@ -1,0 +1,9 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/js/listProjects.js": "/js/listProjects.js",
+    "/js/listPrompts.js": "/js/listPrompts.js",
+    "/js/settings.js": "/js/settings.js",
+    "/js/description.js": "/js/description.js",
+    "/js/chat.js": "/js/chat.js",
+    "/css/app.css": "/css/app.css"
+}
