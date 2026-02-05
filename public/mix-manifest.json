@@ -1,8 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
-    "/js/listProjects.js": "/js/listProjects.js",
-    "/js/listPrompts.js": "/js/listPrompts.js",
-    "/js/settings.js": "/js/settings.js",
+    "/js/project.js": "/js/project.js",
+    "/js/prompt.js": "/js/prompt.js",
+    "/js/setting.js": "/js/setting.js",
     "/js/description.js": "/js/description.js",
     "/js/chat.js": "/js/chat.js",
     "/css/app.css": "/css/app.css"

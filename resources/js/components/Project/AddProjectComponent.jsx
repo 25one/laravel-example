@@ -1,17 +1,16 @@
 ﻿import React from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import {store} from '../reducer'
 
-export default class AddDescriptionDialog extends React.Component {
+export default class AddProjectDialog extends React.Component {
 
    constructor(props) {
       super(props);
 
-      this.handleDescription = this.handleDescription.bind(this);
+      this.handleTitleProject = this.handleTitleProject.bind(this);
 
       this.state = {
-         description: '',
+         titleProject: '',
       }
    }
 
@@ -19,23 +18,21 @@ export default class AddDescriptionDialog extends React.Component {
       //...  
    } 
 
-   handleDescription(event) {
+   handleTitleProject(event) {
       this.setState({
-         description: event.target.value, 
+         titleProject: event.target.value, 
       }); 
    }
 
-   addDescription() {
+   addProject() {
          let self = this;
 
          axios
-         .post('/descriptions', {description: this.state.description})
+         .post('/projects', {titleProject: this.state.titleProject})
             .then(function (resp) {
                console.log(resp.data);
 
-               store.dispatch({ type: 'CHANGE_STATE_DESCRIPTION', descriptionAfterChange: resp.data });
-
-               self.props.modalClose();
+               location.href = '/project/' + resp.data + '/list-prompts';
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -55,15 +52,15 @@ export default class AddDescriptionDialog extends React.Component {
 
    render() {
       return (
-         <form role="form">
+         <div>
             <div className="form-group">
-                  <label>Description</label>
-                  <textarea className="form-control" rows="7" onChange={this.handleDescription}></textarea>
+                  <label>Title of Project</label>
+                  <input className="form-control" onChange={this.handleTitleProject} />
             </div>
             <div className="form-group pt-2">
-               <button type="button" className="btn btn-primary" onClick={() => this.addDescription()}>Submit</button>
+               <button type="button" className="btn btn-primary" onClick={() => this.addProject()}>Submit</button>
             </div>                                                                                 
-         </form>
+         </div>
       );    	
    }
 

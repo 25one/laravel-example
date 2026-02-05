@@ -1,2 +1,2 @@
-import './components/DescriptionComponent'
+import './components/Description/DescriptionComponent'
 

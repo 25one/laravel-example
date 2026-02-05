@@ -78009,24 +78009,22 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 
 /***/ },
 
-/***/ "./resources/js/components/AddPromptComponent.jsx"
-/*!********************************************************!*\
-  !*** ./resources/js/components/AddPromptComponent.jsx ***!
-  \********************************************************/
+/***/ "./resources/js/components/Components/ModalComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Components/ModalComponent.jsx ***!
+  \***************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AddPromptDialog)
+/* harmony export */   "default": () => (/* binding */ ModalDialog)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Modal */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -78044,113 +78042,51 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
 
 
 
-var AddPromptDialog = /*#__PURE__*/function (_React$Component) {
-  function AddPromptDialog(props) {
+var ModalDialog = /*#__PURE__*/function (_React$Component) {
+  function ModalDialog(props) {
     var _this;
-    _classCallCheck(this, AddPromptDialog);
-    _this = _callSuper(this, AddPromptDialog, [props]);
-    _this.handleNumberPrompt = _this.handleNumberPrompt.bind(_this);
-    _this.handleTitlePrompt = _this.handleTitlePrompt.bind(_this);
-    _this.handleContentPrompt = _this.handleContentPrompt.bind(_this);
+    _classCallCheck(this, ModalDialog);
+    _this = _callSuper(this, ModalDialog, [props]);
     _this.state = {
-      numberPrompt: '',
-      titlePrompt: '',
-      contentPrompt: ''
+      show: false
     };
     return _this;
   }
-  _inherits(AddPromptDialog, _React$Component);
-  return _createClass(AddPromptDialog, [{
+  _inherits(ModalDialog, _React$Component);
+  return _createClass(ModalDialog, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      //...  
+      var _this2 = this;
+      this.handleShow(true);
+      _reducer__WEBPACK_IMPORTED_MODULE_3__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_3__.store.getState());
+      });
     }
   }, {
-    key: "handleNumberPrompt",
-    value: function handleNumberPrompt(event) {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      this.handleShow(storeReducer.showModalReducer);
+    }
+  }, {
+    key: "handleShow",
+    value: function handleShow(show) {
       this.setState({
-        numberPrompt: event.target.value
+        show: show
       });
-    }
-  }, {
-    key: "handleTitlePrompt",
-    value: function handleTitlePrompt(event) {
-      this.setState({
-        titlePrompt: event.target.value
-      });
-    }
-  }, {
-    key: "handleContentPrompt",
-    value: function handleContentPrompt(event) {
-      this.setState({
-        contentPrompt: event.target.value
-      });
-    }
-  }, {
-    key: "addPrompt",
-    value: function addPrompt() {
-      var self = this;
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/prompts', {
-        idProject: this.props.idProject,
-        numberPrompt: this.state.numberPrompt,
-        titlePrompt: this.state.titlePrompt,
-        contentPrompt: this.state.contentPrompt
-      }).then(function (resp) {
-        console.log(resp.data);
-        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
-          type: 'CHANGE_STATE_PROMPTS',
-          promptsAfterChange: resp.data.prompts
-        });
-        self.props.modalClose();
-      })["catch"](function (resp) {
-        console.log(resp.response);
-        var errors = resp.response.data.errors;
-        var titleErrors = '';
-        for (var i in errors) {
-          //titleErrors += i + ' - ' + errors[i] + ' ';
-          titleErrors += errors[i] + ' ';
-        }
-        sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
-          icon: 'error',
-          text: titleErrors
-        });
-      });
+      if (show == false) this.props.reset();
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "form-group"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-        className: "text-danger"
-      }, "Number of Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-        className: "form-control",
-        onChange: this.handleNumberPrompt
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "form-group"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Title of Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-        className: "form-control",
-        onChange: this.handleTitlePrompt
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "form-group"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Content of Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-        className: "form-control",
-        rows: "3",
-        onChange: this.handleContentPrompt
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
-        className: "help-block"
-      }, "What do you want to ask AI?")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "form-group pt-2"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-        type: "button",
-        className: "btn btn-primary",
+      var _this3 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        show: this.state.show
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        variant: "secondary",
         onClick: function onClick() {
-          return _this2.addPrompt();
+          return _this3.handleShow(false);
         }
-      }, "Submit")));
+      }, "Close")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"].Body, null, this.props.component));
     }
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
@@ -78158,10 +78094,104 @@ var AddPromptDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/components/ExecuteProjectComponent.jsx"
-/*!*************************************************************!*\
-  !*** ./resources/js/components/ExecuteProjectComponent.jsx ***!
-  \*************************************************************/
+/***/ "./resources/js/components/Components/TableComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Components/TableComponent.jsx ***!
+  \***************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TableDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var datatables_net_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! datatables.net-react */ "./node_modules/datatables.net-react/dist/index.mjs");
+/* harmony import */ var datatables_net_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! datatables.net-bs5 */ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs");
+/* harmony import */ var datatables_net_select_dt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! datatables.net-select-dt */ "./node_modules/datatables.net-select-dt/js/select.dataTables.mjs");
+/* harmony import */ var datatables_net_responsive_dt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! datatables.net-responsive-dt */ "./node_modules/datatables.net-responsive-dt/js/responsive.dataTables.mjs");
+/* harmony import */ var bootstrap_dist_css_bootstrap_grid_min_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap-grid.min.css */ "./node_modules/bootstrap/dist/css/bootstrap-grid.min.css");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+//import DT from 'datatables.net-dt';
+
+
+
+//import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+var TableDialog = /*#__PURE__*/function (_React$Component) {
+  function TableDialog(props) {
+    var _this;
+    _classCallCheck(this, TableDialog);
+    _this = _callSuper(this, TableDialog, [props]);
+    _this.state = {
+      tableData: _this.props.tableData,
+      columns: _this.props.columns
+    };
+    return _this;
+  }
+  _inherits(TableDialog, _React$Component);
+  return _createClass(TableDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+      datatables_net_react__WEBPACK_IMPORTED_MODULE_1__["default"].use(datatables_net_bs5__WEBPACK_IMPORTED_MODULE_2__["default"]); //https://datatables.net/manual/react    
+
+      _reducer__WEBPACK_IMPORTED_MODULE_6__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_6__.store.getState());
+      });
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      if (storeReducer.tableDataReducer) this.handleTableData(storeReducer.tableDataReducer);
+    }
+  }, {
+    key: "handleTableData",
+    value: function handleTableData(tableData) {
+      this.setState({
+        tableData: tableData
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(datatables_net_react__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        slots: this.props.slots,
+        data: this.state.tableData,
+        columns: this.state.columns
+        //className="display"
+        ,
+        className: "table table-striped table-bordered",
+        options: this.props.options
+      }, this.props.thead);
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/Project/ExecuteProjectComponent.jsx"
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/Project/ExecuteProjectComponent.jsx ***!
+  \*********************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78175,12 +78205,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 /* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! clipboard */ "./node_modules/clipboard/dist/clipboard.js");
 /* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(clipboard__WEBPACK_IMPORTED_MODULE_4__);
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
@@ -78268,12 +78298,12 @@ var ExecuteProjectDialog = /*#__PURE__*/function (_React$Component) {
                 break;
               }
               prompt = _step.value;
-              if (prompt.content.includes('#prompt#')) {
+              if (prompt.content.includes('#beforeprompt#')) {
                 //console.log(prompt.content);
 
                 //console.log(this.result);
 
-                prompt.content = prompt.content.replace(/#prompt#/, this.result);
+                prompt.content = prompt.content.replace(/#beforeprompt#/, this.result);
                 console.log(prompt.content);
               }
               this.setState({
@@ -78284,18 +78314,41 @@ var ExecuteProjectDialog = /*#__PURE__*/function (_React$Component) {
               return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/execute-prompt', {
                 prompt: prompt.content
               }).then(function (resp) {
-                console.log(resp.data);
-                self.result = resp.data;
-                self.setState({
-                  loader: false,
-                  executablePrompt: '',
-                  resultProject: resp.data
-                });
+                var errorPython = null;
+                if (Array.isArray(resp.data)) {
+                  self.result = JSON.stringify(resp.data);
+                } else if (_typeof(resp.data) === 'object' && resp.data !== null && 'errorPython' in resp.data) {
+                  errorPython = resp.data.errorPython.message;
+                } else {
+                  self.result = resp.data;
+                }
+
+                //console.log(self.result);
+                //console.log(errorPython);
+
+                if (errorPython) {
+                  self.setState({
+                    loader: false,
+                    resultProject: ''
+                  });
+                  sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
+                    icon: 'error',
+                    //text: errorPython,
+                    text: "There is something wrong. Please try again later."
+                  });
+                } else {
+                  self.setState({
+                    loader: false,
+                    executablePrompt: '',
+                    resultProject: self.result
+                  });
+                }
               })["catch"](function (resp) {
                 console.log(resp.response);
                 sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
                   icon: 'error',
-                  text: resp.response.data.message
+                  //text: resp.response.data.message,
+                  text: "There is something wrong. Please try again later."
                 });
                 self.props.modalClose();
               });
@@ -78327,9 +78380,7 @@ var ExecuteProjectDialog = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Token-API of project "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
@@ -78389,16 +78440,16 @@ var ExecuteProjectDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/components/ExecutePromptComponent.jsx"
-/*!************************************************************!*\
-  !*** ./resources/js/components/ExecutePromptComponent.jsx ***!
-  \************************************************************/
+/***/ "./resources/js/components/Prompt/AddPromptComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Prompt/AddPromptComponent.jsx ***!
+  \***************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ExecutePromptDialog)
+/* harmony export */   "default": () => (/* binding */ AddPromptDialog)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -78406,9 +78457,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
-/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! clipboard */ "./node_modules/clipboard/dist/clipboard.js");
-/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(clipboard__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -78423,6 +78472,156 @@ function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? O
 function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 
+
+
+
+var AddPromptDialog = /*#__PURE__*/function (_React$Component) {
+  function AddPromptDialog(props) {
+    var _this;
+    _classCallCheck(this, AddPromptDialog);
+    _this = _callSuper(this, AddPromptDialog, [props]);
+    _this.handleNumberPrompt = _this.handleNumberPrompt.bind(_this);
+    _this.handleTitlePrompt = _this.handleTitlePrompt.bind(_this);
+    _this.handleContentPrompt = _this.handleContentPrompt.bind(_this);
+    _this.state = {
+      numberPrompt: '',
+      titlePrompt: '',
+      contentPrompt: ''
+    };
+    return _this;
+  }
+  _inherits(AddPromptDialog, _React$Component);
+  return _createClass(AddPromptDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      //...  
+    }
+  }, {
+    key: "handleNumberPrompt",
+    value: function handleNumberPrompt(event) {
+      this.setState({
+        numberPrompt: event.target.value
+      });
+    }
+  }, {
+    key: "handleTitlePrompt",
+    value: function handleTitlePrompt(event) {
+      this.setState({
+        titlePrompt: event.target.value
+      });
+    }
+  }, {
+    key: "handleContentPrompt",
+    value: function handleContentPrompt(event) {
+      this.setState({
+        contentPrompt: event.target.value
+      });
+    }
+  }, {
+    key: "addPrompt",
+    value: function addPrompt() {
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/prompts', {
+        idProject: this.props.idProject,
+        numberPrompt: this.state.numberPrompt,
+        titlePrompt: this.state.titlePrompt,
+        contentPrompt: this.state.contentPrompt
+      }).then(function (resp) {
+        console.log(resp.data);
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data.prompts
+        });
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_MODAL_SHOW',
+          showModalAfterChange: false
+        });
+      })["catch"](function (resp) {
+        console.log(resp.response);
+        var errors = resp.response.data.errors;
+        var titleErrors = '';
+        for (var i in errors) {
+          //titleErrors += i + ' - ' + errors[i] + ' ';
+          titleErrors += errors[i] + ' ';
+        }
+        sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
+          icon: 'error',
+          text: titleErrors
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+        className: "text-danger"
+      }, "Number of Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+        className: "form-control",
+        onChange: this.handleNumberPrompt
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Title of Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+        className: "form-control",
+        onChange: this.handleTitlePrompt
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Content of Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
+        className: "form-control",
+        rows: "3",
+        onChange: this.handleContentPrompt
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
+        className: "help-block"
+      }, "What do you want to ask AI?")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "form-group pt-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+        type: "button",
+        className: "btn btn-primary",
+        onClick: function onClick() {
+          return _this2.addPrompt();
+        }
+      }, "Submit")));
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/Prompt/ExecutePromptComponent.jsx"
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Prompt/ExecutePromptComponent.jsx ***!
+  \*******************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ExecutePromptDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! clipboard */ "./node_modules/clipboard/dist/clipboard.js");
+/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(clipboard__WEBPACK_IMPORTED_MODULE_3__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 
 
 
@@ -78446,7 +78645,7 @@ var ExecutePromptDialog = /*#__PURE__*/function (_React$Component) {
   return _createClass(ExecutePromptDialog, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      window.clipboard = new (clipboard__WEBPACK_IMPORTED_MODULE_4___default())('a.btn');
+      window.clipboard = new (clipboard__WEBPACK_IMPORTED_MODULE_3___default())('a.btn');
       this.getPrompt();
     }
   }, {
@@ -78467,7 +78666,6 @@ var ExecutePromptDialog = /*#__PURE__*/function (_React$Component) {
           icon: 'error',
           text: resp.response.data.message
         });
-        self.props.modalClose();
       });
     }
   }, {
@@ -78481,27 +78679,49 @@ var ExecutePromptDialog = /*#__PURE__*/function (_React$Component) {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/execute-prompt', {
         prompt: this.state.contentPrompt
       }).then(function (resp) {
-        console.log(resp.data);
-        self.setState({
-          loader: false,
-          resultPrompt: resp.data
-        });
+        var result = null;
+        var errorPython = null;
+        if (Array.isArray(resp.data)) {
+          result = JSON.stringify(resp.data);
+        } else if (_typeof(resp.data) === 'object' && resp.data !== null && 'errorPython' in resp.data) {
+          errorPython = resp.data.errorPython.message;
+        } else {
+          result = resp.data;
+        }
+
+        //console.log(result);
+        //console.log(errorPython);
+
+        if (errorPython) {
+          self.setState({
+            loader: false,
+            resultPrompt: ''
+          });
+          sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
+            icon: 'error',
+            //text: errorPython,
+            text: "There is something wrong. Please try again later."
+          });
+        } else {
+          self.setState({
+            loader: false,
+            resultPrompt: result
+          });
+        }
       })["catch"](function (resp) {
         console.log(resp.response);
         sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
           icon: 'error',
-          text: resp.response.data.message
+          //text: resp.response.data.message,
+          text: "There is something wrong. Please try again later."
         });
-        self.props.modalClose();
       });
     }
   }, {
     key: "render",
     value: function render() {
       var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Token-API of prompt "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
@@ -78559,10 +78779,10 @@ var ExecutePromptDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/components/ListPromptsComponent.jsx"
-/*!**********************************************************!*\
-  !*** ./resources/js/components/ListPromptsComponent.jsx ***!
-  \**********************************************************/
+/***/ "./resources/js/components/Prompt/ListPromptsComponent.jsx"
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/Prompt/ListPromptsComponent.jsx ***!
+  \*****************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78570,22 +78790,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Modal */ "./node_modules/react-bootstrap/esm/Modal.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var datatables_net_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! datatables.net-react */ "./node_modules/datatables.net-react/dist/index.mjs");
-/* harmony import */ var datatables_net_bs5__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! datatables.net-bs5 */ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs");
-/* harmony import */ var datatables_net_select_dt__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! datatables.net-select-dt */ "./node_modules/datatables.net-select-dt/js/select.dataTables.mjs");
-/* harmony import */ var datatables_net_responsive_dt__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! datatables.net-responsive-dt */ "./node_modules/datatables.net-responsive-dt/js/responsive.dataTables.mjs");
-/* harmony import */ var bootstrap_dist_css_bootstrap_grid_min_css__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap-grid.min.css */ "./node_modules/bootstrap/dist/css/bootstrap-grid.min.css");
-/* harmony import */ var _AddPromptComponent__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./AddPromptComponent */ "./resources/js/components/AddPromptComponent.jsx");
-/* harmony import */ var _UpdatePromptComponent__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./UpdatePromptComponent */ "./resources/js/components/UpdatePromptComponent.jsx");
-/* harmony import */ var _ExecutePromptComponent__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ExecutePromptComponent */ "./resources/js/components/ExecutePromptComponent.jsx");
-/* harmony import */ var _ExecuteProjectComponent__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ExecuteProjectComponent */ "./resources/js/components/ExecuteProjectComponent.jsx");
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! clipboard */ "./node_modules/clipboard/dist/clipboard.js");
+/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(clipboard__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _Components_ModalComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Components/ModalComponent */ "./resources/js/components/Components/ModalComponent.jsx");
+/* harmony import */ var _Components_TableComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Components/TableComponent */ "./resources/js/components/Components/TableComponent.jsx");
+/* harmony import */ var _AddPromptComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddPromptComponent */ "./resources/js/components/Prompt/AddPromptComponent.jsx");
+/* harmony import */ var _UpdatePromptComponent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./UpdatePromptComponent */ "./resources/js/components/Prompt/UpdatePromptComponent.jsx");
+/* harmony import */ var _ExecutePromptComponent__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ExecutePromptComponent */ "./resources/js/components/Prompt/ExecutePromptComponent.jsx");
+/* harmony import */ var _Project_ExecuteProjectComponent__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Project/ExecuteProjectComponent */ "./resources/js/components/Project/ExecuteProjectComponent.jsx");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -78606,18 +78823,9 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
 
 
 
+ //???
 
 
-
-//import DT from 'datatables.net-dt';
-
-
-
-
-//import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-//import ClipboardJS from 'clipboard';
 
 
 
@@ -78629,15 +78837,14 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
     var _this;
     _classCallCheck(this, ListPromptsDialog);
     _this = _callSuper(this, ListPromptsDialog, [props]);
-    _this.modalClose = _this.modalClose.bind(_this);
+    _this.reset = _this.reset.bind(_this);
     _this.state = {
       variant: null,
-      show: false,
       id: null,
+      tableData: window.project.prompts,
       idProject: window.project.id,
       titleProject: window.project.title,
       tokenProject: window.project.token,
-      tableData: window.project.prompts,
       issetActivePrompts: false,
       columns: [{
         data: 'id',
@@ -78667,7 +78874,97 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
           '<a href="#'+ data +'" ><i class="fe fe-delete"></i></a>' :
           data;
       }},
-      */]
+      */],
+      slots: {
+        0: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-play fa-2x my-play-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.modalShow('executePrompt', data);
+            }
+          });
+        },
+        2: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+            type: "checkbox",
+            name: "active",
+            value: data,
+            checked: data == 1,
+            onChange: function onChange() {
+              _this.changeActive(row.id);
+            }
+          });
+        },
+        4: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
+            className: "form-control",
+            rows: "5",
+            value: data,
+            disabled: true
+          }, data);
+        },
+        6: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-pencil-square fa-2x my-pencil-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.modalShow('update', data);
+            }
+          });
+        },
+        7: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-trash fa-2x my-trash-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.preDeletePrompt(data);
+            }
+          });
+        }
+      },
+      options: {
+        responsive: true,
+        select: true
+      },
+      thead: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "my-play-text",
+        style: {
+          width: '5%'
+        }
+      }, "execute Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "text-danger",
+        style: {
+          width: '5%'
+        }
+      }, "\u2116"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "text-primary",
+        style: {
+          width: '5%'
+        }
+      }, "Active"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        style: {
+          width: '20%'
+        }
+      }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        style: {
+          width: '40%'
+        }
+      }, "Content"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        style: {
+          width: '15%'
+        }
+      }, "Created"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "my-pencil-text",
+        style: {
+          width: '5%'
+        }
+      }, "update"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "my-trash-text",
+        style: {
+          width: '5%'
+        }
+      }, "delete")))
     };
     return _this;
   }
@@ -78676,14 +78973,25 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
-      //window.clipboard = new ClipboardJS('a.btn');
+      window.clipboard = new (clipboard__WEBPACK_IMPORTED_MODULE_4___default())('a.btn'); //???
 
-      datatables_net_react__WEBPACK_IMPORTED_MODULE_6__["default"].use(datatables_net_bs5__WEBPACK_IMPORTED_MODULE_7__["default"]); //https://datatables.net/manual/react 
-
-      _reducer__WEBPACK_IMPORTED_MODULE_15__.store.subscribe(function () {
-        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_15__.store.getState());
+      //because componentDidUpdate() and getIssetActivePrompts()
+      _reducer__WEBPACK_IMPORTED_MODULE_11__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_11__.store.getState());
       });
       this.getIssetActivePrompts();
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      if (storeReducer.tableDataReducer) this.handlePrompts(storeReducer.tableDataReducer);
+    }
+  }, {
+    key: "handlePrompts",
+    value: function handlePrompts(prompts) {
+      this.setState({
+        tableData: prompts
+      });
     }
   }, {
     key: "componentDidUpdate",
@@ -78721,25 +79029,12 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
-    key: "handleStore",
-    value: function handleStore(storeReducer) {
-      this.handlePrompts(storeReducer.promptsReducer);
-    }
-  }, {
-    key: "handlePrompts",
-    value: function handlePrompts(prompts) {
-      this.setState({
-        tableData: prompts
-      });
-    }
-  }, {
     key: "modalShow",
     value: function modalShow(variant) {
       var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       console.log(id);
       this.setState({
         variant: variant,
-        show: true,
         id: id
       });
     }
@@ -78747,7 +79042,7 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
     key: "preDeletePrompt",
     value: function preDeletePrompt(id) {
       var _this3 = this;
-      sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
+      sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -78765,12 +79060,15 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
     key: "deletePrompt",
     value: function deletePrompt(id) {
       var self = this;
-      axios__WEBPACK_IMPORTED_MODULE_4___default()["delete"]('/prompts/' + id).then(function (resp) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default()["delete"]('/prompts/' + id).then(function (resp) {
         console.log(resp.data);
-        self.handlePrompts(resp.data.prompts);
+        _reducer__WEBPACK_IMPORTED_MODULE_11__.store.dispatch({
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data.prompts
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
-        sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
           icon: 'error',
           text: resp.response.data.message
         });
@@ -78782,49 +79080,56 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
       //console.log(id);
 
       var self = this;
-      axios__WEBPACK_IMPORTED_MODULE_4___default().post('/change-active-prompt', {
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post('/change-active-prompt', {
         id: id,
         idProject: this.state.idProject
       }).then(function (resp) {
         console.log(resp.data);
-        self.handlePrompts(resp.data.prompts);
+        _reducer__WEBPACK_IMPORTED_MODULE_11__.store.dispatch({
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data.prompts
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
-        sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
           icon: 'error',
           text: resp.response.data.message
         });
       });
     }
   }, {
-    key: "modalClose",
-    value: function modalClose() {
+    key: "reset",
+    value: function reset() {
       this.setState({
-        show: false
+        variant: null,
+        id: null
       });
     }
   }, {
     key: "render",
     value: function render() {
       var _this4 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        show: this.state.show
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        variant: "secondary",
-        onClick: this.modalClose
-      }, "Close")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"].Body, null, this.state.variant == 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_AddPromptComponent__WEBPACK_IMPORTED_MODULE_11__["default"], {
-        modalClose: this.modalClose,
-        idProject: this.state.idProject
-      }), this.state.variant == 'update' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_UpdatePromptComponent__WEBPACK_IMPORTED_MODULE_12__["default"], {
-        modalClose: this.modalClose,
-        id: this.state.id
-      }), this.state.variant == 'executePrompt' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ExecutePromptComponent__WEBPACK_IMPORTED_MODULE_13__["default"], {
-        modalClose: this.modalClose,
-        id: this.state.id
-      }), this.state.variant == 'executeProject' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ExecuteProjectComponent__WEBPACK_IMPORTED_MODULE_14__["default"], {
-        modalClose: this.modalClose,
-        idProject: this.state.idProject
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.variant == 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_AddPromptComponent__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          idProject: this.state.idProject
+        })
+      }), this.state.variant == 'update' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_UpdatePromptComponent__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          id: this.state.id
+        })
+      }), this.state.variant == 'executePrompt' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ExecutePromptComponent__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          id: this.state.id
+        })
+      }), this.state.variant == 'executeProject' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Project_ExecuteProjectComponent__WEBPACK_IMPORTED_MODULE_10__["default"], {
+          idProject: this.state.idProject
+        })
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         id: "page-wrapper"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "container-fluid pt-5"
@@ -78858,102 +79163,13 @@ var ListPromptsDialog = /*#__PURE__*/function (_React$Component) {
         className: "my-play-text fs-3"
       }, this.state.titleProject))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(datatables_net_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        slots: {
-          0: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-play fa-2x my-play-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.modalShow('executePrompt', data);
-              }
-            });
-          },
-          2: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-              type: "checkbox",
-              name: "active",
-              value: data,
-              checked: data == 1,
-              onChange: function onChange() {
-                _this4.changeActive(row.id);
-              }
-            });
-          },
-          4: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-              className: "form-control",
-              rows: "5",
-              value: data,
-              disabled: true
-            }, data);
-          },
-          6: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-pencil-square fa-2x my-pencil-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.modalShow('update', data);
-              }
-            });
-          },
-          7: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-trash fa-2x my-trash-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.preDeletePrompt(data);
-              }
-            });
-          }
-        },
-        data: this.state.tableData,
-        columns: this.state.columns
-        //className="display"
-        ,
-        className: "table table-striped table-bordered",
-        options: {
-          responsive: true,
-          select: true
-        }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "my-play-text",
-        style: {
-          width: '5%'
-        }
-      }, "execute Prompt"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "text-danger",
-        style: {
-          width: '5%'
-        }
-      }, "\u2116"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "text-primary",
-        style: {
-          width: '5%'
-        }
-      }, "Active"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        style: {
-          width: '20%'
-        }
-      }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        style: {
-          width: '40%'
-        }
-      }, "Content"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        style: {
-          width: '15%'
-        }
-      }, "Created"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "my-pencil-text",
-        style: {
-          width: '5%'
-        }
-      }, "update"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "my-trash-text",
-        style: {
-          width: '5%'
-        }
-      }, "delete"))))))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_TableComponent__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        tableData: this.state.tableData,
+        columns: this.state.columns,
+        slots: this.state.slots,
+        options: this.state.options,
+        thead: this.state.thead
+      })))));
     }
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
@@ -78962,10 +79178,10 @@ root.render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElem
 
 /***/ },
 
-/***/ "./resources/js/components/UpdatePromptComponent.jsx"
-/*!***********************************************************!*\
-  !*** ./resources/js/components/UpdatePromptComponent.jsx ***!
-  \***********************************************************/
+/***/ "./resources/js/components/Prompt/UpdatePromptComponent.jsx"
+/*!******************************************************************!*\
+  !*** ./resources/js/components/Prompt/UpdatePromptComponent.jsx ***!
+  \******************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78979,7 +79195,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -79075,10 +79291,13 @@ var UpdatePromptDialog = /*#__PURE__*/function (_React$Component) {
       }).then(function (resp) {
         console.log(resp.data);
         _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
-          type: 'CHANGE_STATE_PROMPTS',
-          promptsAfterChange: resp.data.prompts
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data.prompts
         });
-        self.props.modalClose();
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_MODAL_SHOW',
+          showModalAfterChange: false
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
         var errors = resp.response.data.errors;
@@ -79097,9 +79316,7 @@ var UpdatePromptDialog = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
         className: "text-danger"
@@ -79138,10 +79355,10 @@ var UpdatePromptDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/reducer.js"
-/*!*********************************!*\
-  !*** ./resources/js/reducer.js ***!
-  \*********************************/
+/***/ "./resources/js/components/reducer.js"
+/*!********************************************!*\
+  !*** ./resources/js/components/reducer.js ***!
+  \********************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -79155,17 +79372,13 @@ var reducer = function reducer() {
   var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
   var action = arguments.length > 1 ? arguments[1] : undefined;
   switch (action.type) {
-    case 'CHANGE_STATE_PROMPTS':
+    case 'CHANGE_MODAL_SHOW':
       return {
-        promptsReducer: action.promptsAfterChange
+        showModalReducer: action.showModalAfterChange
       };
-    case 'CHANGE_STATE_PROJECTS':
+    case 'CHANGE_STATE_TABLEDATA':
       return {
-        projectsReducer: action.projectsAfterChange
-      };
-    case 'CHANGE_STATE_DESCRIPTION':
-      return {
-        descriptionReducer: action.descriptionAfterChange
+        tableDataReducer: action.tableDataAfterChange
       };
     //...other events... 
     default:
@@ -79283,11 +79496,11 @@ var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
-/*!*************************************!*\
-  !*** ./resources/js/listPrompts.js ***!
-  \*************************************/
+/*!********************************!*\
+  !*** ./resources/js/prompt.js ***!
+  \********************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ListPromptsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/ListPromptsComponent */ "./resources/js/components/ListPromptsComponent.jsx");
+/* harmony import */ var _components_Prompt_ListPromptsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Prompt/ListPromptsComponent */ "./resources/js/components/Prompt/ListPromptsComponent.jsx");
 
 })();
 

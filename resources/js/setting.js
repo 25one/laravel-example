@@ -1,0 +1,2 @@
+import './components/Setting/SettingsComponent'
+

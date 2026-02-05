@@ -40526,10 +40526,10 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 
 /***/ },
 
-/***/ "./resources/js/components/SettingsComponent.jsx"
-/*!*******************************************************!*\
-  !*** ./resources/js/components/SettingsComponent.jsx ***!
-  \*******************************************************/
+/***/ "./resources/js/components/Setting/SettingsComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Setting/SettingsComponent.jsx ***!
+  \***************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40829,11 +40829,11 @@ var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
-/*!**********************************!*\
-  !*** ./resources/js/settings.js ***!
-  \**********************************/
+/*!*********************************!*\
+  !*** ./resources/js/setting.js ***!
+  \*********************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_SettingsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/SettingsComponent */ "./resources/js/components/SettingsComponent.jsx");
+/* harmony import */ var _components_Setting_SettingsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Setting/SettingsComponent */ "./resources/js/components/Setting/SettingsComponent.jsx");
 
 })();
 

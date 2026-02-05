@@ -8,25 +8,29 @@ abstract class AIBase {
     public $prompt;
 
     public function getVariantAI() {
-       return ['variantAI' => $this->variantAI];
+       return ["variantAI" => $this->variantAI];
     }    
 
     public function getVariantModel() {
-       return ['variantModel' => $this->variantModel];
+       return ["variantModel" => $this->variantModel];
     } 
 
 	abstract function getApiKey();
 
     public function getPrompt() {
-       return ['prompt' => $this->prompt];
+       return ["prompt" => $this->prompt];
     }	
 
 	public function funcGet() {
-        $arrPython = array_merge($this->getVariantAI(), $this->getVariantModel(), $this->getApiKey(), $this->getPrompt());
+      try {
+         $arrPython = array_merge($this->getVariantAI(), $this->getVariantModel(), $this->getApiKey(), $this->getPrompt());
 
-		$commandPython = escapeshellcmd('python3 ' . base_path() . '/app/python/prompt.py ') . "'". json_encode($arrPython) . "'";
-	
-		return shell_exec($commandPython);	
+         $commandPython = escapeshellcmd('python3 ' . base_path() . '/app/python/prompt.py ') . escapeshellarg(json_encode($arrPython));
+
+         return shell_exec($commandPython);	
+      } catch (\Exception $e) {
+         return $e->getMessage();
+      }      
 	}
 
 }

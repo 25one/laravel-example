@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Repositories\ApiRepository;
 use App\Http\Requests\WidgetChatRequest;
+use App\Http\Requests\ApiPromptRequest;
 
 class ApiController extends Controller
 {
@@ -30,5 +31,15 @@ class ApiController extends Controller
     {
         return $this->apiRepository->chatQuestion($request, \Auth::id());
     }
+
+    /**
+     * Make prompt-execute.
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function apiPromptExecute(ApiPromptRequest $request)
+    {        
+        if ($request->type == 'prompt') return $this->apiRepository->promptExecute($request); //$request->type; $request->token; $request->prompt;       
+        if ($request->type == 'project') return $this->apiRepository->projectExecute($request);
+    }    
 
 }

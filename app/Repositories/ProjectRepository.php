@@ -66,4 +66,15 @@ class ProjectRepository
        Prompt::where('project_id', $idProject)->delete();
     }     
 
+    /**
+     * Update item to Project-model.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function updateProject($project, $request)
+    {
+       $project->title = $request->titleProject;
+
+       $project->save(); 
+    }    
 }

@@ -1,24 +1,18 @@
 ﻿import React from 'react';
 import ReactDOM from "react-dom/client";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import DataTable from 'datatables.net-react';
-//import DT from 'datatables.net-dt';
-import DT from 'datatables.net-bs5';
-import 'datatables.net-select-dt';
-import 'datatables.net-responsive-dt';
 
-//import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap-grid.min.css';
+import ClipboardJS from 'clipboard'; //???
 
-//import ClipboardJS from 'clipboard';
+import ModalDialog from '../Components/ModalComponent';
+
+import TableDialog from '../Components/TableComponent';
 
 import AddPromptDialog from './AddPromptComponent';
 import UpdatePromptDialog from './UpdatePromptComponent';
 import ExecutePromptDialog from './ExecutePromptComponent';
-import ExecuteProjectDialog from './ExecuteProjectComponent';
+import ExecuteProjectDialog from '../Project/ExecuteProjectComponent';
 import {store} from '../reducer';
 
 class ListPromptsDialog extends React.Component {
@@ -26,17 +20,17 @@ class ListPromptsDialog extends React.Component {
    constructor(props) {
       super(props);
 
-      this.modalClose = this.modalClose.bind(this);
+      this.reset = this.reset.bind(this);
 
       this.state = {
          variant: null,
-         show: false,
          id: null,
+
+         tableData: window.project.prompts,
 
          idProject: window.project.id,
          titleProject: window.project.title,
          tokenProject: window.project.token,         
-         tableData: window.project.prompts,
          issetActivePrompts: false,
 
          columns: [
@@ -56,18 +50,53 @@ class ListPromptsDialog extends React.Component {
             }},
             */
          ],
+
+         slots: {
+                  0: (data, row) => (<i className="fa fa-play fa-2x my-play-icon" aria-hidden="true" onClick={() => {this.modalShow('executePrompt', data);}}></i>),  
+                  2: (data, row) => (<input type="checkbox" name="active" value={data} checked={data == 1} onChange={() => {this.changeActive(row.id);}} />), 
+                  4: (data, row) => (<textarea className="form-control" rows="5" value={data} disabled={true}>{data}</textarea>),                           
+                  6: (data, row) => (<i className="fa fa-pencil-square fa-2x my-pencil-icon" aria-hidden="true" onClick={() => {this.modalShow('update', data);}}></i>), 
+                  7: (data, row) => (<i className="fa fa-trash fa-2x my-trash-icon" aria-hidden="true" onClick={() => {this.preDeletePrompt(data);}}></i>)     
+                },
+
+         options: {
+                     responsive: true,
+                     select: true,
+                  },
+
+         thead: <thead>
+                  <tr>
+                     <th className="my-play-text" style={{width: '5%'}}>execute Prompt</th>   
+                     <th className="text-danger" style={{width: '5%'}}>№</th> 
+                     <th className="text-primary" style={{width: '5%'}}>Active</th>                             
+                     <th style={{width: '20%'}}>Title</th>
+                     <th style={{width: '40%'}}>Content</th>
+                     <th style={{width: '15%'}}>Created</th>
+                     <th className="my-pencil-text" style={{width: '5%'}}>update</th>
+                     <th className="my-trash-text" style={{width: '5%'}}>delete</th>
+                  </tr>
+               </thead>           
       }
    }
 
    componentDidMount() {
-      //window.clipboard = new ClipboardJS('a.btn');
+      window.clipboard = new ClipboardJS('a.btn'); //???
 
-      DataTable.use(DT); //https://datatables.net/manual/react 
-
+      //because componentDidUpdate() and getIssetActivePrompts()
       store.subscribe(() => this.handleStore(store.getState()));    
 
       this.getIssetActivePrompts();
    }
+
+   handleStore(storeReducer) {
+      if (storeReducer.tableDataReducer) this.handlePrompts(storeReducer.tableDataReducer);
+   }   
+
+   handlePrompts(prompts) {
+       this.setState({
+          tableData: prompts,  
+       });
+   } 
 
    componentDidUpdate(prevProps, prevState) {
    // Если tableData изменился, делаем новый запрос
@@ -96,22 +125,11 @@ class ListPromptsDialog extends React.Component {
       });   
    }
 
-   handleStore(storeReducer) {
-      this.handlePrompts(storeReducer.promptsReducer);
-   }   
-
-   handlePrompts(prompts) {
-       this.setState({
-          tableData: prompts,  
-       });
-   }  
-
    modalShow(variant, id = null) {
       console.log(id);
 
       this.setState({
          variant: variant,
-         show: true,
          id: id,
       }); 
    } 
@@ -140,7 +158,7 @@ class ListPromptsDialog extends React.Component {
             .then(function (resp) {
                console.log(resp.data);
 
-               self.handlePrompts(resp.data.prompts);
+               store.dispatch({ type: 'CHANGE_STATE_TABLEDATA', tableDataAfterChange: resp.data.prompts });
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -162,7 +180,7 @@ class ListPromptsDialog extends React.Component {
             .then(function (resp) {
                console.log(resp.data);
 
-               self.handlePrompts(resp.data.prompts);
+               store.dispatch({ type: 'CHANGE_STATE_TABLEDATA', tableDataAfterChange: resp.data.prompts });
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -174,39 +192,33 @@ class ListPromptsDialog extends React.Component {
             });        
    }
 
-   modalClose() {
+   reset() {
       this.setState({
-         show: false, 
-      });  
+         variant: null,
+         id: null,
+      }); 
    }
 
    render() {
       return (
             <div>
 
-               <Modal show={this.state.show}>
-                  <Modal.Header>
-                     <Button variant="secondary" onClick={this.modalClose}>Close</Button>
-                  </Modal.Header>        
-                  <Modal.Body>
-                     {this.state.variant == 'add' &&
-                     (
-                     <AddPromptDialog modalClose={this.modalClose} idProject={this.state.idProject} /> 
-                     )} 
-                     {this.state.variant == 'update' &&
-                     (
-                     <UpdatePromptDialog modalClose={this.modalClose} id={this.state.id} /> 
-                     )}
-                     {this.state.variant == 'executePrompt' &&
-                     (
-                     <ExecutePromptDialog modalClose={this.modalClose} id={this.state.id} /> 
-                     )} 
-                     {this.state.variant == 'executeProject' &&
-                     (
-                     <ExecuteProjectDialog modalClose={this.modalClose} idProject={this.state.idProject} /> 
-                     )}                                                                                            
-                  </Modal.Body>                 
-               </Modal> 
+               {this.state.variant == 'add' &&
+               (
+               <ModalDialog reset={this.reset} component={<AddPromptDialog idProject={this.state.idProject} />} /> 
+               )}
+               {this.state.variant == 'update' &&
+               (
+               <ModalDialog reset={this.reset} component={<UpdatePromptDialog id={this.state.id} />} /> 
+               )}
+               {this.state.variant == 'executePrompt' &&
+               (
+               <ModalDialog reset={this.reset} component={<ExecutePromptDialog id={this.state.id} />} /> 
+               )} 
+               {this.state.variant == 'executeProject' &&
+               (
+               <ModalDialog reset={this.reset} component={<ExecuteProjectDialog idProject={this.state.idProject} />} /> 
+               )}                                
 
                <div id="page-wrapper">
                   <div className="container-fluid pt-5">
@@ -233,35 +245,14 @@ class ListPromptsDialog extends React.Component {
                     </div>   
                    
                     <div className="row">
-                        <DataTable
-                           slots={{
-                              0: (data, row) => (<i className="fa fa-play fa-2x my-play-icon" aria-hidden="true" onClick={() => {this.modalShow('executePrompt', data);}}></i>),  
-                              2: (data, row) => (<input type="checkbox" name="active" value={data} checked={data == 1} onChange={() => {this.changeActive(row.id);}} />), 
-                              4: (data, row) => (<textarea className="form-control" rows="5" value={data} disabled={true}>{data}</textarea>),                           
-                              6: (data, row) => (<i className="fa fa-pencil-square fa-2x my-pencil-icon" aria-hidden="true" onClick={() => {this.modalShow('update', data);}}></i>), 
-                              7: (data, row) => (<i className="fa fa-trash fa-2x my-trash-icon" aria-hidden="true" onClick={() => {this.preDeletePrompt(data);}}></i>)     
-                           }} 
-                           data={this.state.tableData} 
-                           columns={this.state.columns} 
-                           //className="display"
-                           className="table table-striped table-bordered"
-                           options={{
-                              responsive: true,
-                              select: true,
-                           }}>
-                            <thead>
-                                <tr>
-                                    <th className="my-play-text" style={{width: '5%'}}>execute Prompt</th>   
-                                    <th className="text-danger" style={{width: '5%'}}>№</th> 
-                                    <th className="text-primary" style={{width: '5%'}}>Active</th>                             
-                                    <th style={{width: '20%'}}>Title</th>
-                                    <th style={{width: '40%'}}>Content</th>
-                                    <th style={{width: '15%'}}>Created</th>
-                                    <th className="my-pencil-text" style={{width: '5%'}}>update</th>
-                                    <th className="my-trash-text" style={{width: '5%'}}>delete</th>
-                                </tr>
-                            </thead>
-                        </DataTable>
+
+                        <TableDialog tableData={this.state.tableData} 
+                                     columns={this.state.columns} 
+                                     slots={this.state.slots} 
+                                     options={this.state.options} 
+                                     thead={this.state.thead} 
+                                     />
+
                      </div>
                   </div>
                </div>

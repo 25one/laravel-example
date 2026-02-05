@@ -3718,901 +3718,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 /***/ },
 
-/***/ "./node_modules/clipboard/dist/clipboard.js"
-/*!**************************************************!*\
-  !*** ./node_modules/clipboard/dist/clipboard.js ***!
-  \**************************************************/
-(module) {
-
-/*!
- * clipboard.js v2.0.11
- * https://clipboardjs.com/
- *
- * Licensed MIT © Zeno Rocha
- */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else // removed by dead control flow
-{}
-})(this, function() {
-return /******/ (function() { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 686:
-/***/ (function(__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_623__) {
-
-"use strict";
-
-// EXPORTS
-__nested_webpack_require_623__.d(__nested_webpack_exports__, {
-  "default": function() { return /* binding */ clipboard; }
-});
-
-// EXTERNAL MODULE: ./node_modules/tiny-emitter/index.js
-var tiny_emitter = __nested_webpack_require_623__(279);
-var tiny_emitter_default = /*#__PURE__*/__nested_webpack_require_623__.n(tiny_emitter);
-// EXTERNAL MODULE: ./node_modules/good-listener/src/listen.js
-var listen = __nested_webpack_require_623__(370);
-var listen_default = /*#__PURE__*/__nested_webpack_require_623__.n(listen);
-// EXTERNAL MODULE: ./node_modules/select/src/select.js
-var src_select = __nested_webpack_require_623__(817);
-var select_default = /*#__PURE__*/__nested_webpack_require_623__.n(src_select);
-;// CONCATENATED MODULE: ./src/common/command.js
-/**
- * Executes a given operation type.
- * @param {String} type
- * @return {Boolean}
- */
-function command(type) {
-  try {
-    return document.execCommand(type);
-  } catch (err) {
-    return false;
-  }
-}
-;// CONCATENATED MODULE: ./src/actions/cut.js
-
-
-/**
- * Cut action wrapper.
- * @param {String|HTMLElement} target
- * @return {String}
- */
-
-var ClipboardActionCut = function ClipboardActionCut(target) {
-  var selectedText = select_default()(target);
-  command('cut');
-  return selectedText;
-};
-
-/* harmony default export */ var actions_cut = (ClipboardActionCut);
-;// CONCATENATED MODULE: ./src/common/create-fake-element.js
-/**
- * Creates a fake textarea element with a value.
- * @param {String} value
- * @return {HTMLElement}
- */
-function createFakeElement(value) {
-  var isRTL = document.documentElement.getAttribute('dir') === 'rtl';
-  var fakeElement = document.createElement('textarea'); // Prevent zooming on iOS
-
-  fakeElement.style.fontSize = '12pt'; // Reset box model
-
-  fakeElement.style.border = '0';
-  fakeElement.style.padding = '0';
-  fakeElement.style.margin = '0'; // Move element out of screen horizontally
-
-  fakeElement.style.position = 'absolute';
-  fakeElement.style[isRTL ? 'right' : 'left'] = '-9999px'; // Move element to the same position vertically
-
-  var yPosition = window.pageYOffset || document.documentElement.scrollTop;
-  fakeElement.style.top = "".concat(yPosition, "px");
-  fakeElement.setAttribute('readonly', '');
-  fakeElement.value = value;
-  return fakeElement;
-}
-;// CONCATENATED MODULE: ./src/actions/copy.js
-
-
-
-/**
- * Create fake copy action wrapper using a fake element.
- * @param {String} target
- * @param {Object} options
- * @return {String}
- */
-
-var fakeCopyAction = function fakeCopyAction(value, options) {
-  var fakeElement = createFakeElement(value);
-  options.container.appendChild(fakeElement);
-  var selectedText = select_default()(fakeElement);
-  command('copy');
-  fakeElement.remove();
-  return selectedText;
-};
-/**
- * Copy action wrapper.
- * @param {String|HTMLElement} target
- * @param {Object} options
- * @return {String}
- */
-
-
-var ClipboardActionCopy = function ClipboardActionCopy(target) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-    container: document.body
-  };
-  var selectedText = '';
-
-  if (typeof target === 'string') {
-    selectedText = fakeCopyAction(target, options);
-  } else if (target instanceof HTMLInputElement && !['text', 'search', 'url', 'tel', 'password'].includes(target === null || target === void 0 ? void 0 : target.type)) {
-    // If input type doesn't support `setSelectionRange`. Simulate it. https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/setSelectionRange
-    selectedText = fakeCopyAction(target.value, options);
-  } else {
-    selectedText = select_default()(target);
-    command('copy');
-  }
-
-  return selectedText;
-};
-
-/* harmony default export */ var actions_copy = (ClipboardActionCopy);
-;// CONCATENATED MODULE: ./src/actions/default.js
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-
-
-/**
- * Inner function which performs selection from either `text` or `target`
- * properties and then executes copy or cut operations.
- * @param {Object} options
- */
-
-var ClipboardActionDefault = function ClipboardActionDefault() {
-  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  // Defines base properties passed from constructor.
-  var _options$action = options.action,
-      action = _options$action === void 0 ? 'copy' : _options$action,
-      container = options.container,
-      target = options.target,
-      text = options.text; // Sets the `action` to be performed which can be either 'copy' or 'cut'.
-
-  if (action !== 'copy' && action !== 'cut') {
-    throw new Error('Invalid "action" value, use either "copy" or "cut"');
-  } // Sets the `target` property using an element that will be have its content copied.
-
-
-  if (target !== undefined) {
-    if (target && _typeof(target) === 'object' && target.nodeType === 1) {
-      if (action === 'copy' && target.hasAttribute('disabled')) {
-        throw new Error('Invalid "target" attribute. Please use "readonly" instead of "disabled" attribute');
-      }
-
-      if (action === 'cut' && (target.hasAttribute('readonly') || target.hasAttribute('disabled'))) {
-        throw new Error('Invalid "target" attribute. You can\'t cut text from elements with "readonly" or "disabled" attributes');
-      }
-    } else {
-      throw new Error('Invalid "target" value, use a valid Element');
-    }
-  } // Define selection strategy based on `text` property.
-
-
-  if (text) {
-    return actions_copy(text, {
-      container: container
-    });
-  } // Defines which selection strategy based on `target` property.
-
-
-  if (target) {
-    return action === 'cut' ? actions_cut(target) : actions_copy(target, {
-      container: container
-    });
-  }
-};
-
-/* harmony default export */ var actions_default = (ClipboardActionDefault);
-;// CONCATENATED MODULE: ./src/clipboard.js
-function clipboard_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { clipboard_typeof = function _typeof(obj) { return typeof obj; }; } else { clipboard_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return clipboard_typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (clipboard_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-
-
-/**
- * Helper function to retrieve attribute value.
- * @param {String} suffix
- * @param {Element} element
- */
-
-function getAttributeValue(suffix, element) {
-  var attribute = "data-clipboard-".concat(suffix);
-
-  if (!element.hasAttribute(attribute)) {
-    return;
-  }
-
-  return element.getAttribute(attribute);
-}
-/**
- * Base class which takes one or more elements, adds event listeners to them,
- * and instantiates a new `ClipboardAction` on each click.
- */
-
-
-var Clipboard = /*#__PURE__*/function (_Emitter) {
-  _inherits(Clipboard, _Emitter);
-
-  var _super = _createSuper(Clipboard);
-
-  /**
-   * @param {String|HTMLElement|HTMLCollection|NodeList} trigger
-   * @param {Object} options
-   */
-  function Clipboard(trigger, options) {
-    var _this;
-
-    _classCallCheck(this, Clipboard);
-
-    _this = _super.call(this);
-
-    _this.resolveOptions(options);
-
-    _this.listenClick(trigger);
-
-    return _this;
-  }
-  /**
-   * Defines if attributes would be resolved using internal setter functions
-   * or custom functions that were passed in the constructor.
-   * @param {Object} options
-   */
-
-
-  _createClass(Clipboard, [{
-    key: "resolveOptions",
-    value: function resolveOptions() {
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      this.action = typeof options.action === 'function' ? options.action : this.defaultAction;
-      this.target = typeof options.target === 'function' ? options.target : this.defaultTarget;
-      this.text = typeof options.text === 'function' ? options.text : this.defaultText;
-      this.container = clipboard_typeof(options.container) === 'object' ? options.container : document.body;
-    }
-    /**
-     * Adds a click event listener to the passed trigger.
-     * @param {String|HTMLElement|HTMLCollection|NodeList} trigger
-     */
-
-  }, {
-    key: "listenClick",
-    value: function listenClick(trigger) {
-      var _this2 = this;
-
-      this.listener = listen_default()(trigger, 'click', function (e) {
-        return _this2.onClick(e);
-      });
-    }
-    /**
-     * Defines a new `ClipboardAction` on each click event.
-     * @param {Event} e
-     */
-
-  }, {
-    key: "onClick",
-    value: function onClick(e) {
-      var trigger = e.delegateTarget || e.currentTarget;
-      var action = this.action(trigger) || 'copy';
-      var text = actions_default({
-        action: action,
-        container: this.container,
-        target: this.target(trigger),
-        text: this.text(trigger)
-      }); // Fires an event based on the copy operation result.
-
-      this.emit(text ? 'success' : 'error', {
-        action: action,
-        text: text,
-        trigger: trigger,
-        clearSelection: function clearSelection() {
-          if (trigger) {
-            trigger.focus();
-          }
-
-          window.getSelection().removeAllRanges();
-        }
-      });
-    }
-    /**
-     * Default `action` lookup function.
-     * @param {Element} trigger
-     */
-
-  }, {
-    key: "defaultAction",
-    value: function defaultAction(trigger) {
-      return getAttributeValue('action', trigger);
-    }
-    /**
-     * Default `target` lookup function.
-     * @param {Element} trigger
-     */
-
-  }, {
-    key: "defaultTarget",
-    value: function defaultTarget(trigger) {
-      var selector = getAttributeValue('target', trigger);
-
-      if (selector) {
-        return document.querySelector(selector);
-      }
-    }
-    /**
-     * Allow fire programmatically a copy action
-     * @param {String|HTMLElement} target
-     * @param {Object} options
-     * @returns Text copied.
-     */
-
-  }, {
-    key: "defaultText",
-
-    /**
-     * Default `text` lookup function.
-     * @param {Element} trigger
-     */
-    value: function defaultText(trigger) {
-      return getAttributeValue('text', trigger);
-    }
-    /**
-     * Destroy lifecycle.
-     */
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      this.listener.destroy();
-    }
-  }], [{
-    key: "copy",
-    value: function copy(target) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        container: document.body
-      };
-      return actions_copy(target, options);
-    }
-    /**
-     * Allow fire programmatically a cut action
-     * @param {String|HTMLElement} target
-     * @returns Text cutted.
-     */
-
-  }, {
-    key: "cut",
-    value: function cut(target) {
-      return actions_cut(target);
-    }
-    /**
-     * Returns the support of the given action, or all actions if no action is
-     * given.
-     * @param {String} [action]
-     */
-
-  }, {
-    key: "isSupported",
-    value: function isSupported() {
-      var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ['copy', 'cut'];
-      var actions = typeof action === 'string' ? [action] : action;
-      var support = !!document.queryCommandSupported;
-      actions.forEach(function (action) {
-        support = support && !!document.queryCommandSupported(action);
-      });
-      return support;
-    }
-  }]);
-
-  return Clipboard;
-}((tiny_emitter_default()));
-
-/* harmony default export */ var clipboard = (Clipboard);
-
-/***/ }),
-
-/***/ 828:
-/***/ (function(module) {
-
-var DOCUMENT_NODE_TYPE = 9;
-
-/**
- * A polyfill for Element.matches()
- */
-if (typeof Element !== 'undefined' && !Element.prototype.matches) {
-    var proto = Element.prototype;
-
-    proto.matches = proto.matchesSelector ||
-                    proto.mozMatchesSelector ||
-                    proto.msMatchesSelector ||
-                    proto.oMatchesSelector ||
-                    proto.webkitMatchesSelector;
-}
-
-/**
- * Finds the closest parent that matches a selector.
- *
- * @param {Element} element
- * @param {String} selector
- * @return {Function}
- */
-function closest (element, selector) {
-    while (element && element.nodeType !== DOCUMENT_NODE_TYPE) {
-        if (typeof element.matches === 'function' &&
-            element.matches(selector)) {
-          return element;
-        }
-        element = element.parentNode;
-    }
-}
-
-module.exports = closest;
-
-
-/***/ }),
-
-/***/ 438:
-/***/ (function(module, __unused_webpack_exports, __nested_webpack_require_15749__) {
-
-var closest = __nested_webpack_require_15749__(828);
-
-/**
- * Delegates event to a selector.
- *
- * @param {Element} element
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @param {Boolean} useCapture
- * @return {Object}
- */
-function _delegate(element, selector, type, callback, useCapture) {
-    var listenerFn = listener.apply(this, arguments);
-
-    element.addEventListener(type, listenerFn, useCapture);
-
-    return {
-        destroy: function() {
-            element.removeEventListener(type, listenerFn, useCapture);
-        }
-    }
-}
-
-/**
- * Delegates event to a selector.
- *
- * @param {Element|String|Array} [elements]
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @param {Boolean} useCapture
- * @return {Object}
- */
-function delegate(elements, selector, type, callback, useCapture) {
-    // Handle the regular Element usage
-    if (typeof elements.addEventListener === 'function') {
-        return _delegate.apply(null, arguments);
-    }
-
-    // Handle Element-less usage, it defaults to global delegation
-    if (typeof type === 'function') {
-        // Use `document` as the first parameter, then apply arguments
-        // This is a short way to .unshift `arguments` without running into deoptimizations
-        return _delegate.bind(null, document).apply(null, arguments);
-    }
-
-    // Handle Selector-based usage
-    if (typeof elements === 'string') {
-        elements = document.querySelectorAll(elements);
-    }
-
-    // Handle Array-like based usage
-    return Array.prototype.map.call(elements, function (element) {
-        return _delegate(element, selector, type, callback, useCapture);
-    });
-}
-
-/**
- * Finds closest match and invokes callback.
- *
- * @param {Element} element
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @return {Function}
- */
-function listener(element, selector, type, callback) {
-    return function(e) {
-        e.delegateTarget = closest(e.target, selector);
-
-        if (e.delegateTarget) {
-            callback.call(element, e);
-        }
-    }
-}
-
-module.exports = delegate;
-
-
-/***/ }),
-
-/***/ 879:
-/***/ (function(__unused_webpack_module, exports) {
-
-/**
- * Check if argument is a HTML element.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.node = function(value) {
-    return value !== undefined
-        && value instanceof HTMLElement
-        && value.nodeType === 1;
-};
-
-/**
- * Check if argument is a list of HTML elements.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.nodeList = function(value) {
-    var type = Object.prototype.toString.call(value);
-
-    return value !== undefined
-        && (type === '[object NodeList]' || type === '[object HTMLCollection]')
-        && ('length' in value)
-        && (value.length === 0 || exports.node(value[0]));
-};
-
-/**
- * Check if argument is a string.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.string = function(value) {
-    return typeof value === 'string'
-        || value instanceof String;
-};
-
-/**
- * Check if argument is a function.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.fn = function(value) {
-    var type = Object.prototype.toString.call(value);
-
-    return type === '[object Function]';
-};
-
-
-/***/ }),
-
-/***/ 370:
-/***/ (function(module, __unused_webpack_exports, __nested_webpack_require_19113__) {
-
-var is = __nested_webpack_require_19113__(879);
-var delegate = __nested_webpack_require_19113__(438);
-
-/**
- * Validates all params and calls the right
- * listener function based on its target type.
- *
- * @param {String|HTMLElement|HTMLCollection|NodeList} target
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listen(target, type, callback) {
-    if (!target && !type && !callback) {
-        throw new Error('Missing required arguments');
-    }
-
-    if (!is.string(type)) {
-        throw new TypeError('Second argument must be a String');
-    }
-
-    if (!is.fn(callback)) {
-        throw new TypeError('Third argument must be a Function');
-    }
-
-    if (is.node(target)) {
-        return listenNode(target, type, callback);
-    }
-    else if (is.nodeList(target)) {
-        return listenNodeList(target, type, callback);
-    }
-    else if (is.string(target)) {
-        return listenSelector(target, type, callback);
-    }
-    else {
-        throw new TypeError('First argument must be a String, HTMLElement, HTMLCollection, or NodeList');
-    }
-}
-
-/**
- * Adds an event listener to a HTML element
- * and returns a remove listener function.
- *
- * @param {HTMLElement} node
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listenNode(node, type, callback) {
-    node.addEventListener(type, callback);
-
-    return {
-        destroy: function() {
-            node.removeEventListener(type, callback);
-        }
-    }
-}
-
-/**
- * Add an event listener to a list of HTML elements
- * and returns a remove listener function.
- *
- * @param {NodeList|HTMLCollection} nodeList
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listenNodeList(nodeList, type, callback) {
-    Array.prototype.forEach.call(nodeList, function(node) {
-        node.addEventListener(type, callback);
-    });
-
-    return {
-        destroy: function() {
-            Array.prototype.forEach.call(nodeList, function(node) {
-                node.removeEventListener(type, callback);
-            });
-        }
-    }
-}
-
-/**
- * Add an event listener to a selector
- * and returns a remove listener function.
- *
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listenSelector(selector, type, callback) {
-    return delegate(document.body, selector, type, callback);
-}
-
-module.exports = listen;
-
-
-/***/ }),
-
-/***/ 817:
-/***/ (function(module) {
-
-function select(element) {
-    var selectedText;
-
-    if (element.nodeName === 'SELECT') {
-        element.focus();
-
-        selectedText = element.value;
-    }
-    else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
-        var isReadOnly = element.hasAttribute('readonly');
-
-        if (!isReadOnly) {
-            element.setAttribute('readonly', '');
-        }
-
-        element.select();
-        element.setSelectionRange(0, element.value.length);
-
-        if (!isReadOnly) {
-            element.removeAttribute('readonly');
-        }
-
-        selectedText = element.value;
-    }
-    else {
-        if (element.hasAttribute('contenteditable')) {
-            element.focus();
-        }
-
-        var selection = window.getSelection();
-        var range = document.createRange();
-
-        range.selectNodeContents(element);
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        selectedText = selection.toString();
-    }
-
-    return selectedText;
-}
-
-module.exports = select;
-
-
-/***/ }),
-
-/***/ 279:
-/***/ (function(module) {
-
-function E () {
-  // Keep this empty so it's easier to inherit from
-  // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
-}
-
-E.prototype = {
-  on: function (name, callback, ctx) {
-    var e = this.e || (this.e = {});
-
-    (e[name] || (e[name] = [])).push({
-      fn: callback,
-      ctx: ctx
-    });
-
-    return this;
-  },
-
-  once: function (name, callback, ctx) {
-    var self = this;
-    function listener () {
-      self.off(name, listener);
-      callback.apply(ctx, arguments);
-    };
-
-    listener._ = callback
-    return this.on(name, listener, ctx);
-  },
-
-  emit: function (name) {
-    var data = [].slice.call(arguments, 1);
-    var evtArr = ((this.e || (this.e = {}))[name] || []).slice();
-    var i = 0;
-    var len = evtArr.length;
-
-    for (i; i < len; i++) {
-      evtArr[i].fn.apply(evtArr[i].ctx, data);
-    }
-
-    return this;
-  },
-
-  off: function (name, callback) {
-    var e = this.e || (this.e = {});
-    var evts = e[name];
-    var liveEvents = [];
-
-    if (evts && callback) {
-      for (var i = 0, len = evts.length; i < len; i++) {
-        if (evts[i].fn !== callback && evts[i].fn._ !== callback)
-          liveEvents.push(evts[i]);
-      }
-    }
-
-    // Remove event from queue to prevent memory leak
-    // Suggested by https://github.com/lazd
-    // Ref: https://github.com/scottcorgan/tiny-emitter/commit/c6ebfaa9bc973b33d110a84a307742b7cf94c953#commitcomment-5024910
-
-    (liveEvents.length)
-      ? e[name] = liveEvents
-      : delete e[name];
-
-    return this;
-  }
-};
-
-module.exports = E;
-module.exports.TinyEmitter = E;
-
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __nested_webpack_require_24495__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_24495__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nested_webpack_require_24495__.n = function(module) {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				function() { return module['default']; } :
-/******/ 				function() { return module; };
-/******/ 			__nested_webpack_require_24495__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nested_webpack_require_24495__.d = function(exports, definition) {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nested_webpack_require_24495__.o(definition, key) && !__nested_webpack_require_24495__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__nested_webpack_require_24495__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
-/******/ 	
-/************************************************************************/
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	return __nested_webpack_require_24495__(686);
-/******/ })()
-.default;
-});
-
-/***/ },
-
 /***/ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs"
 /*!**********************************************************************!*\
   !*** ./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs ***!
@@ -78009,24 +77114,22 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 
 /***/ },
 
-/***/ "./resources/js/components/AddProjectComponent.jsx"
-/*!*********************************************************!*\
-  !*** ./resources/js/components/AddProjectComponent.jsx ***!
-  \*********************************************************/
+/***/ "./resources/js/components/Components/ModalComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Components/ModalComponent.jsx ***!
+  \***************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AddProjectDialog)
+/* harmony export */   "default": () => (/* binding */ ModalDialog)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Modal */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -78041,6 +77144,185 @@ function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? O
 function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 
+
+
+
+var ModalDialog = /*#__PURE__*/function (_React$Component) {
+  function ModalDialog(props) {
+    var _this;
+    _classCallCheck(this, ModalDialog);
+    _this = _callSuper(this, ModalDialog, [props]);
+    _this.state = {
+      show: false
+    };
+    return _this;
+  }
+  _inherits(ModalDialog, _React$Component);
+  return _createClass(ModalDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+      this.handleShow(true);
+      _reducer__WEBPACK_IMPORTED_MODULE_3__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_3__.store.getState());
+      });
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      this.handleShow(storeReducer.showModalReducer);
+    }
+  }, {
+    key: "handleShow",
+    value: function handleShow(show) {
+      this.setState({
+        show: show
+      });
+      if (show == false) this.props.reset();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        show: this.state.show
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        variant: "secondary",
+        onClick: function onClick() {
+          return _this3.handleShow(false);
+        }
+      }, "Close")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"].Body, null, this.props.component));
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/Components/TableComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Components/TableComponent.jsx ***!
+  \***************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TableDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var datatables_net_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! datatables.net-react */ "./node_modules/datatables.net-react/dist/index.mjs");
+/* harmony import */ var datatables_net_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! datatables.net-bs5 */ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs");
+/* harmony import */ var datatables_net_select_dt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! datatables.net-select-dt */ "./node_modules/datatables.net-select-dt/js/select.dataTables.mjs");
+/* harmony import */ var datatables_net_responsive_dt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! datatables.net-responsive-dt */ "./node_modules/datatables.net-responsive-dt/js/responsive.dataTables.mjs");
+/* harmony import */ var bootstrap_dist_css_bootstrap_grid_min_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap-grid.min.css */ "./node_modules/bootstrap/dist/css/bootstrap-grid.min.css");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+//import DT from 'datatables.net-dt';
+
+
+
+//import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+var TableDialog = /*#__PURE__*/function (_React$Component) {
+  function TableDialog(props) {
+    var _this;
+    _classCallCheck(this, TableDialog);
+    _this = _callSuper(this, TableDialog, [props]);
+    _this.state = {
+      tableData: _this.props.tableData,
+      columns: _this.props.columns
+    };
+    return _this;
+  }
+  _inherits(TableDialog, _React$Component);
+  return _createClass(TableDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+      datatables_net_react__WEBPACK_IMPORTED_MODULE_1__["default"].use(datatables_net_bs5__WEBPACK_IMPORTED_MODULE_2__["default"]); //https://datatables.net/manual/react    
+
+      _reducer__WEBPACK_IMPORTED_MODULE_6__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_6__.store.getState());
+      });
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      if (storeReducer.tableDataReducer) this.handleTableData(storeReducer.tableDataReducer);
+    }
+  }, {
+    key: "handleTableData",
+    value: function handleTableData(tableData) {
+      this.setState({
+        tableData: tableData
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(datatables_net_react__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        slots: this.props.slots,
+        data: this.state.tableData,
+        columns: this.state.columns
+        //className="display"
+        ,
+        className: "table table-striped table-bordered",
+        options: this.props.options
+      }, this.props.thead);
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/Project/AddProjectComponent.jsx"
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/Project/AddProjectComponent.jsx ***!
+  \*****************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AddProjectDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 
 
 
@@ -78076,9 +77358,6 @@ var AddProjectDialog = /*#__PURE__*/function (_React$Component) {
         titleProject: this.state.titleProject
       }).then(function (resp) {
         console.log(resp.data);
-
-        //store.dispatch({ type: 'CHANGE_STATE_PROJECTS', projectsAfterChange: resp.data });
-
         location.href = '/project/' + resp.data + '/list-prompts';
       })["catch"](function (resp) {
         console.log(resp.response);
@@ -78098,9 +77377,7 @@ var AddProjectDialog = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Title of Project"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
         className: "form-control",
@@ -78121,10 +77398,10 @@ var AddProjectDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/components/ListProjectsComponent.jsx"
-/*!***********************************************************!*\
-  !*** ./resources/js/components/ListProjectsComponent.jsx ***!
-  \***********************************************************/
+/***/ "./resources/js/components/Project/ListProjectsComponent.jsx"
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Project/ListProjectsComponent.jsx ***!
+  \*******************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78132,21 +77409,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Modal */ "./node_modules/react-bootstrap/esm/Modal.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var datatables_net_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! datatables.net-react */ "./node_modules/datatables.net-react/dist/index.mjs");
-/* harmony import */ var datatables_net_bs5__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! datatables.net-bs5 */ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs");
-/* harmony import */ var datatables_net_select_dt__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! datatables.net-select-dt */ "./node_modules/datatables.net-select-dt/js/select.dataTables.mjs");
-/* harmony import */ var datatables_net_responsive_dt__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! datatables.net-responsive-dt */ "./node_modules/datatables.net-responsive-dt/js/responsive.dataTables.mjs");
-/* harmony import */ var bootstrap_dist_css_bootstrap_grid_min_css__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap-grid.min.css */ "./node_modules/bootstrap/dist/css/bootstrap-grid.min.css");
-/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! clipboard */ "./node_modules/clipboard/dist/clipboard.js");
-/* harmony import */ var clipboard__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(clipboard__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _AddProjectComponent__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./AddProjectComponent */ "./resources/js/components/AddProjectComponent.jsx");
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Components_ModalComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Components/ModalComponent */ "./resources/js/components/Components/ModalComponent.jsx");
+/* harmony import */ var _Components_TableComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Components/TableComponent */ "./resources/js/components/Components/TableComponent.jsx");
+/* harmony import */ var _AddProjectComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddProjectComponent */ "./resources/js/components/Project/AddProjectComponent.jsx");
+/* harmony import */ var _UpdateProjectComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./UpdateProjectComponent */ "./resources/js/components/Project/UpdateProjectComponent.jsx");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -78167,38 +77438,25 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
 
 
 
-//import DT from 'datatables.net-dt';
 
-
-
-
-//import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-
-//import UpdatePromptDialog from './UpdatePromptComponent';
-//import ExecutePromptDialog from './ExecutePromptComponent';
 
 var ListProjectsDialog = /*#__PURE__*/function (_React$Component) {
   function ListProjectsDialog(props) {
     var _this;
     _classCallCheck(this, ListProjectsDialog);
     _this = _callSuper(this, ListProjectsDialog, [props]);
-    _this.modalClose = _this.modalClose.bind(_this);
+    _this.reset = _this.reset.bind(_this);
     _this.state = {
       variant: null,
-      show: false,
       id: null,
       tableData: window.projects,
-      columns: [
-      //{ data: 'id', className: 'text-center' },
-      {
+      columns: [{
         data: 'title'
-      },
-      //{ data: 'token', className: 'text-token' },
-      //{ data: 'content' },
-      {
+      }, {
         data: 'updated_at'
+      }, {
+        data: 'id',
+        className: 'text-center'
       }, {
         data: 'id',
         className: 'text-center'
@@ -78212,7 +77470,64 @@ var ListProjectsDialog = /*#__PURE__*/function (_React$Component) {
           '<a href="#'+ data +'" ><i class="fe fe-delete"></i></a>' :
           data;
       }},
-      */]
+      */],
+      slots: {
+        2: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-desktop fa-2x my-desktop-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.showProject(data);
+            }
+          });
+        },
+        3: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-pencil-square fa-2x my-pencil-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.modalShow('update', data);
+            }
+          });
+        },
+        4: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-trash fa-2x my-trash-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.preDeleteProject(data);
+            }
+          });
+        }
+      },
+      options: {
+        responsive: true,
+        select: true
+      },
+      thead: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        style: {
+          width: '60%'
+        }
+      }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        style: {
+          width: '25%'
+        }
+      }, "Created"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "my-pencil-text",
+        style: {
+          width: '5%'
+        }
+      }, "show / execute"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "my-pencil-text",
+        style: {
+          width: '5%'
+        }
+      }, "update"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+        className: "my-trash-text",
+        style: {
+          width: '5%'
+        }
+      }, "delete")))
     };
     return _this;
   }
@@ -78220,47 +77535,29 @@ var ListProjectsDialog = /*#__PURE__*/function (_React$Component) {
   return _createClass(ListProjectsDialog, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
-      window.clipboard = new (clipboard__WEBPACK_IMPORTED_MODULE_11___default())('a.btn');
-      datatables_net_react__WEBPACK_IMPORTED_MODULE_6__["default"].use(datatables_net_bs5__WEBPACK_IMPORTED_MODULE_7__["default"]); //https://datatables.net/manual/react 
-
-      _reducer__WEBPACK_IMPORTED_MODULE_13__.store.subscribe(function () {
-        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_13__.store.getState());
-      });
+      //...        
     }
   }, {
-    key: "handleStore",
-    value: function handleStore(storeReducer) {
-      this.handleProjects(storeReducer.projectsReducer);
-    }
-  }, {
-    key: "handleProjects",
-    value: function handleProjects(projects) {
-      this.setState({
-        tableData: projects
-      });
-    }
-  }, {
-    key: "viewPrompts",
-    value: function viewPrompts(idProject) {
+    key: "showProject",
+    value: function showProject(idProject) {
       location.href = '/project/' + idProject + '/list-prompts';
     }
   }, {
     key: "modalShow",
     value: function modalShow(variant) {
       var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      console.log(id);
+      //console.log(id);
+
       this.setState({
         variant: variant,
-        show: true,
         id: id
       });
     }
   }, {
     key: "preDeleteProject",
     value: function preDeleteProject(id) {
-      var _this3 = this;
-      sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
+      var _this2 = this;
+      sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -78270,7 +77567,7 @@ var ListProjectsDialog = /*#__PURE__*/function (_React$Component) {
         confirmButtonText: "Yes, delete it!"
       }).then(function (result) {
         if (result.isConfirmed) {
-          _this3.deleteProject(id);
+          _this2.deleteProject(id);
         }
       });
     }
@@ -78278,36 +77575,41 @@ var ListProjectsDialog = /*#__PURE__*/function (_React$Component) {
     key: "deleteProject",
     value: function deleteProject(id) {
       var self = this;
-      axios__WEBPACK_IMPORTED_MODULE_4___default()["delete"]('/projects/' + id).then(function (resp) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default()["delete"]('/projects/' + id).then(function (resp) {
         console.log(resp.data);
-        self.handleProjects(resp.data);
+        _reducer__WEBPACK_IMPORTED_MODULE_8__.store.dispatch({
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
-        sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
           icon: 'error',
           text: resp.response.data.message
         });
       });
     }
   }, {
-    key: "modalClose",
-    value: function modalClose() {
+    key: "reset",
+    value: function reset() {
       this.setState({
-        show: false
+        variant: null,
+        id: null
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        show: this.state.show
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        variant: "secondary",
-        onClick: this.modalClose
-      }, "Close")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"].Body, null, this.state.variant == 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_AddProjectComponent__WEBPACK_IMPORTED_MODULE_12__["default"], {
-        modalClose: this.modalClose
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      var _this3 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.variant == 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_AddProjectComponent__WEBPACK_IMPORTED_MODULE_6__["default"], null)
+      }), this.state.variant == 'update' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_UpdateProjectComponent__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          id: this.state.id
+        })
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         id: "page-wrapper"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "container-fluid pt-5"
@@ -78319,64 +77621,19 @@ var ListProjectsDialog = /*#__PURE__*/function (_React$Component) {
         className: "fa fa-plus fa-2x my-plus-icon",
         "aria-hidden": "true",
         onClick: function onClick() {
-          _this4.modalShow('add');
+          _this3.modalShow('add');
         }
       }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "my-plus-text"
       }, "Add a new Project"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(datatables_net_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        slots: {
-          //0: (data, row) => (<i className="fa fa-play fa-2x my-play-icon" aria-hidden="true" onClick={() => {this.modalShow('execute', data);}}></i>),  
-          //1: (data, row) => (<a href="#" className="btn btn-link" data-toggle="tooltip" title="click to copy to clipboard" value="copied..." onClick={(event) => {event.preventDefault();}} data-clipboard-text={data}>{data}</a>),  
-          //3: (data, row) => (<textarea className="form-control" rows="5" disabled="true">{data}</textarea>),                           
-          2: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-desktop fa-2x my-desktop-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.viewPrompts(data);
-              }
-            });
-          },
-          3: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-trash fa-2x my-trash-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.preDeleteProject(data);
-              }
-            });
-          }
-        },
-        data: this.state.tableData,
-        columns: this.state.columns
-        //className="display"
-        ,
-        className: "table table-striped table-bordered",
-        options: {
-          responsive: true,
-          select: true
-        }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        style: {
-          width: '70%'
-        }
-      }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        style: {
-          width: '20%'
-        }
-      }, "Created"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "my-pencil-text",
-        style: {
-          width: '5%'
-        }
-      }, "show Project"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-        className: "my-trash-text",
-        style: {
-          width: '5%'
-        }
-      }, "delete"))))))));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_TableComponent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        tableData: this.state.tableData,
+        columns: this.state.columns,
+        slots: this.state.slots,
+        options: this.state.options,
+        thead: this.state.thead
+      })))));
     }
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
@@ -78385,10 +77642,144 @@ root.render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElem
 
 /***/ },
 
-/***/ "./resources/js/reducer.js"
-/*!*********************************!*\
-  !*** ./resources/js/reducer.js ***!
-  \*********************************/
+/***/ "./resources/js/components/Project/UpdateProjectComponent.jsx"
+/*!********************************************************************!*\
+  !*** ./resources/js/components/Project/UpdateProjectComponent.jsx ***!
+  \********************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ UpdateProjectDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+
+
+var UpdateProjectDialog = /*#__PURE__*/function (_React$Component) {
+  function UpdateProjectDialog(props) {
+    var _this;
+    _classCallCheck(this, UpdateProjectDialog);
+    _this = _callSuper(this, UpdateProjectDialog, [props]);
+    _this.handleTitleProject = _this.handleTitleProject.bind(_this);
+    _this.state = {
+      id: null,
+      titleProject: ''
+    };
+    return _this;
+  }
+  _inherits(UpdateProjectDialog, _React$Component);
+  return _createClass(UpdateProjectDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.getProject();
+    }
+  }, {
+    key: "handleTitleProject",
+    value: function handleTitleProject(event) {
+      this.setState({
+        titleProject: event.target.value
+      });
+    }
+  }, {
+    key: "getProject",
+    value: function getProject() {
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/projects/' + this.props.id).then(function (resp) {
+        console.log(resp.data);
+        self.setState({
+          id: resp.data.id,
+          titleProject: resp.data.title
+        });
+      })["catch"](function (resp) {
+        console.log(resp.response);
+        sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
+          icon: 'error',
+          text: resp.response.data.message
+        });
+      });
+    }
+  }, {
+    key: "updateProject",
+    value: function updateProject() {
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().put('/projects/' + this.state.id, {
+        titleProject: this.state.titleProject
+      }).then(function (resp) {
+        console.log(resp.data);
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data
+        });
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_MODAL_SHOW',
+          showModalAfterChange: false
+        });
+      })["catch"](function (resp) {
+        console.log(resp.response);
+        var errors = resp.response.data.errors;
+        var titleErrors = '';
+        for (var i in errors) {
+          //titleErrors += i + ' - ' + errors[i] + ' ';
+          titleErrors += errors[i] + ' ';
+        }
+        sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire({
+          icon: 'error',
+          text: titleErrors
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "form-group"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Title of project"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+        className: "form-control",
+        onChange: this.handleTitleProject,
+        value: this.state.titleProject
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "form-group pt-2"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+        type: "button",
+        className: "btn btn-primary",
+        onClick: function onClick() {
+          return _this2.updateProject();
+        }
+      }, "Submit")));
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/reducer.js"
+/*!********************************************!*\
+  !*** ./resources/js/components/reducer.js ***!
+  \********************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78402,17 +77793,13 @@ var reducer = function reducer() {
   var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
   var action = arguments.length > 1 ? arguments[1] : undefined;
   switch (action.type) {
-    case 'CHANGE_STATE_PROMPTS':
+    case 'CHANGE_MODAL_SHOW':
       return {
-        promptsReducer: action.promptsAfterChange
+        showModalReducer: action.showModalAfterChange
       };
-    case 'CHANGE_STATE_PROJECTS':
+    case 'CHANGE_STATE_TABLEDATA':
       return {
-        projectsReducer: action.projectsAfterChange
-      };
-    case 'CHANGE_STATE_DESCRIPTION':
-      return {
-        descriptionReducer: action.descriptionAfterChange
+        tableDataReducer: action.tableDataAfterChange
       };
     //...other events... 
     default:
@@ -78530,11 +77917,11 @@ var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
-/*!**************************************!*\
-  !*** ./resources/js/listProjects.js ***!
-  \**************************************/
+/*!*********************************!*\
+  !*** ./resources/js/project.js ***!
+  \*********************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ListProjectsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/ListProjectsComponent */ "./resources/js/components/ListProjectsComponent.jsx");
+/* harmony import */ var _components_Project_ListProjectsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Project/ListProjectsComponent */ "./resources/js/components/Project/ListProjectsComponent.jsx");
 
 })();
 

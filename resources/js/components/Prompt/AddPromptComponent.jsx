@@ -3,17 +3,16 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import {store} from '../reducer'
 
-export default class UpdatePromptDialog extends React.Component {
+export default class AddPromptDialog extends React.Component {
 
    constructor(props) {
       super(props);
 
-      this.handleNumberPrompt = this.handleNumberPrompt.bind(this);
+      this.handleNumberPrompt = this.handleNumberPrompt.bind(this); 
       this.handleTitlePrompt = this.handleTitlePrompt.bind(this);
       this.handleContentPrompt = this.handleContentPrompt.bind(this);
 
       this.state = {
-         id: null,
          numberPrompt: '',
          titlePrompt: '',
          contentPrompt: '',
@@ -21,7 +20,7 @@ export default class UpdatePromptDialog extends React.Component {
    }
 
    componentDidMount() {
-      this.getPrompt();  
+      //...  
    } 
 
    handleNumberPrompt(event) {
@@ -42,45 +41,16 @@ export default class UpdatePromptDialog extends React.Component {
       }); 
    }
 
-   getPrompt() {
+   addPrompt() {
          let self = this;
 
          axios
-         .get('/prompts/' + this.props.id)
+         .post('/prompts', {idProject: this.props.idProject, numberPrompt: this.state.numberPrompt, titlePrompt: this.state.titlePrompt, contentPrompt: this.state.contentPrompt})
             .then(function (resp) {
                console.log(resp.data);
 
-               self.setState({
-                  id: resp.data.id, 
-                  idProject: resp.data.project_id,
-                  numberPrompt: resp.data.number,
-                  titlePrompt: resp.data.title,
-                  contentPrompt: resp.data.content,                  
-               });
-            })
-            .catch(function (resp) {
-               console.log(resp.response);
-
-               Swal.fire({
-                  icon: 'error',
-                  text: resp.response.data.message,
-               });
-
-               self.props.modalClose();
-            });
-   } 
-
-   updatePrompt() {
-         let self = this;
-
-         axios
-         .put('/prompts/' + this.state.id, {idProject: this.state.idProject, idPrompt: this.state.id, numberPrompt: this.state.numberPrompt, titlePrompt: this.state.titlePrompt, contentPrompt: this.state.contentPrompt})
-            .then(function (resp) {
-               console.log(resp.data);
-
-               store.dispatch({ type: 'CHANGE_STATE_PROMPTS', promptsAfterChange: resp.data.prompts });
-
-               self.props.modalClose();
+               store.dispatch({ type: 'CHANGE_STATE_TABLEDATA', tableDataAfterChange: resp.data.prompts });
+               store.dispatch({ type: 'CHANGE_MODAL_SHOW', showModalAfterChange: false });
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -100,18 +70,18 @@ export default class UpdatePromptDialog extends React.Component {
 
    render() {
       return (
-         <form role="form">
+         <div>
             <div className="form-group">
                   <label className="text-danger">Number of Prompt</label>
-                  <input className="form-control" onChange={this.handleNumberPrompt} value={this.state.numberPrompt} />
-            </div>              
+                  <input className="form-control" onChange={this.handleNumberPrompt} />
+            </div>           
             <div className="form-group">
-                  <label>Title of prompt</label>
-                  <input className="form-control" onChange={this.handleTitlePrompt} value={this.state.titlePrompt} />
+                  <label>Title of Prompt</label>
+                  <input className="form-control" onChange={this.handleTitlePrompt} />
             </div>
             <div className="form-group">
-                  <label>Content of prompt</label>
-                  <textarea className="form-control" rows="3" onChange={this.handleContentPrompt} value={this.state.contentPrompt}></textarea>
+                  <label>Content of Prompt</label>
+                  <textarea className="form-control" rows="3" onChange={this.handleContentPrompt}></textarea>
                   <p className="help-block">What do you want to ask AI?</p>
             </div> 
             {/* 
@@ -120,10 +90,10 @@ export default class UpdatePromptDialog extends React.Component {
                   <input type="file" />
             </div> 
             */} 
-            <div className="form-group">
-               <button type="button" className="btn btn-primary" onClick={() => this.updatePrompt()}>Submit</button>
+            <div className="form-group pt-2">
+               <button type="button" className="btn btn-primary" onClick={() => this.addPrompt()}>Submit</button>
             </div>                                                                                 
-         </form>
+         </div>
       );    	
    }
 

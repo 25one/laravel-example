@@ -27,7 +27,7 @@ class PromptRequest extends Request
                 },
             ],
             'titlePrompt' => 'required|string|min:3|max:100',
-            'contentPrompt' => 'required|string|min:3|max:1000',
+            'contentPrompt' => 'required|string|min:3|max:10000',
         ];
     }
 
@@ -42,7 +42,7 @@ class PromptRequest extends Request
             'titlePrompt.max' => 'Field Title must have a maximum of 100 characters!',
             'titlePrompt.min' => 'Field Title must have at least 3 characters!',            
             'contentPrompt.required' => 'Field Content must be filled in!',            
-            'contentPrompt.max' => 'Field Content must have a maximum of 1000 characters!',
+            'contentPrompt.max' => 'Field Content must have a maximum of 10000 characters!',
             'contentPrompt.min' => 'Field Content must have at least 3 characters!',
           ];
     }     

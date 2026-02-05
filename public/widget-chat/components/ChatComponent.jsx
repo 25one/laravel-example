@@ -41,12 +41,33 @@ class ReactDialog extends React.Component {
          //.post('http://192.168.33.10:8080/api/widget-chat-question?api_token=' + this.state.api_token, {prompt: this.state.question}) //...or...
          .post('/api/widget-chat-question?api_token=' + this.state.api_token, {prompt: this.state.question})
             .then(function (resp) {
-               console.log(resp.data);
+               //console.log(resp.data);
 
-               self.setState({
-                  loader: false,
-                  answer: resp.data, 
-               }); 
+               let result = null;
+               let errorPython = null;
+
+               if (typeof resp.data === 'object' && resp.data !== null && 'errorPython' in resp.data) {
+                  errorPython = resp.data.errorPython.message;
+               } else {
+                  result = resp.data;
+               }
+
+               if (errorPython) {
+                  self.setState({
+                     loader: false, 
+                     resultPrompt: '',
+                  });                  
+                  Swal.fire({
+                     icon: 'error',
+                     //text: errorPython,
+                     text: "There is something wrong. Please try again later.",
+                  });
+               } else {
+                     self.setState({
+                        loader: false,
+                        answer: result, 
+                     }); 
+               }                            
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -56,16 +77,24 @@ class ReactDialog extends React.Component {
                   loader: false,
                });
 
-               let errors = resp.response.data.errors;               
-               let titleErrors = '';
-               for (let i in errors) {
-                  //titleErrors += i + ' - ' + errors[i] + ' ';
-                  titleErrors += errors[i] + ' ';
-               }
-               Swal.fire({
-                  icon: 'error',
-                  text: titleErrors,
-               });                 
+               if ('errors' in resp.response.data) {
+                  let errors = resp.response.data.errors;               
+                  let titleErrors = '';
+                  for (let i in errors) {
+                     //titleErrors += i + ' - ' + errors[i] + ' ';
+                     titleErrors += errors[i] + ' ';
+                  }
+                  Swal.fire({
+                     icon: 'error',
+                     text: titleErrors,
+                  });  
+               } else if ('message' in resp.response.data) {
+                  Swal.fire({
+                     icon: 'error',
+                     //text: resp.response.data.message,
+                     text: "There is something wrong. Please try again later.",
+                  }); 
+               }             
             });
    }
 

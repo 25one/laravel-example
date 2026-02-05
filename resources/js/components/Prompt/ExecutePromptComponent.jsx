@@ -1,7 +1,6 @@
 ﻿import React from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import {store} from '../reducer'
 
 import ClipboardJS from 'clipboard';
 
@@ -48,8 +47,6 @@ export default class ExecutePromptDialog extends React.Component {
                   icon: 'error',
                   text: resp.response.data.message,
                });
-
-               self.props.modalClose();
             });
    } 
 
@@ -64,28 +61,52 @@ export default class ExecutePromptDialog extends React.Component {
          axios
          .post('/execute-prompt', {prompt: this.state.contentPrompt})
             .then(function (resp) {
-               console.log(resp.data);
+               let result = null;
+               let errorPython = null;
 
-               self.setState({
-                  loader: false, 
-                  resultPrompt: resp.data,                  
-               });               
+               if (Array.isArray(resp.data)) {
+                  result = JSON.stringify(resp.data)
+               } else if (typeof resp.data === 'object' && resp.data !== null && 'errorPython' in resp.data) {
+                  errorPython = resp.data.errorPython.message;
+               } else {
+                  result = resp.data;
+               }
+
+               //console.log(result);
+               //console.log(errorPython);
+
+               if (errorPython) {
+                  self.setState({
+                     loader: false, 
+                     resultPrompt: '',
+                  });                  
+                  Swal.fire({
+                     icon: 'error',
+                     //text: errorPython,
+                     text: "There is something wrong. Please try again later.",
+                  });
+               } else {
+                  self.setState({
+                     loader: false, 
+                     resultPrompt: result,
+                  });  
+               }             
             })
             .catch(function (resp) {
                console.log(resp.response);
 
                Swal.fire({
                   icon: 'error',
-                  text: resp.response.data.message,
+                  //text: resp.response.data.message,
+                  text: "There is something wrong. Please try again later.",
                });
-
-               self.props.modalClose();
             });
+
    } 
 
    render() {
       return (         
-         <form role="form">
+         <div>
             <div className="form-group">
                   <label>Token-API of prompt </label>
                   <a href="#" className="form-control btn btn-link" data-toggle="tooltip" title="click to copy to clipboard" value="copied..." onClick={(event) => {event.preventDefault();}} data-clipboard-text={this.state.tokenPrompt}>{this.state.tokenPrompt}</a>
@@ -122,7 +143,7 @@ export default class ExecutePromptDialog extends React.Component {
             <div className="form-group">
                <button type="button" className="btn btn-primary" onClick={() => this.executePrompt()}>Submit</button>
             </div>                                                                                 
-         </form>
+         </div>
       );    	
    }
 

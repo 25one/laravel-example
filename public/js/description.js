@@ -77114,10 +77114,189 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 
 /***/ },
 
-/***/ "./resources/js/components/AddDescriptionComponent.jsx"
-/*!*************************************************************!*\
-  !*** ./resources/js/components/AddDescriptionComponent.jsx ***!
-  \*************************************************************/
+/***/ "./resources/js/components/Components/ModalComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Components/ModalComponent.jsx ***!
+  \***************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ModalDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Modal */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+
+
+var ModalDialog = /*#__PURE__*/function (_React$Component) {
+  function ModalDialog(props) {
+    var _this;
+    _classCallCheck(this, ModalDialog);
+    _this = _callSuper(this, ModalDialog, [props]);
+    _this.state = {
+      show: false
+    };
+    return _this;
+  }
+  _inherits(ModalDialog, _React$Component);
+  return _createClass(ModalDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+      this.handleShow(true);
+      _reducer__WEBPACK_IMPORTED_MODULE_3__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_3__.store.getState());
+      });
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      this.handleShow(storeReducer.showModalReducer);
+    }
+  }, {
+    key: "handleShow",
+    value: function handleShow(show) {
+      this.setState({
+        show: show
+      });
+      if (show == false) this.props.reset();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        show: this.state.show
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        variant: "secondary",
+        onClick: function onClick() {
+          return _this3.handleShow(false);
+        }
+      }, "Close")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_2__["default"].Body, null, this.props.component));
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/Components/TableComponent.jsx"
+/*!***************************************************************!*\
+  !*** ./resources/js/components/Components/TableComponent.jsx ***!
+  \***************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TableDialog)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var datatables_net_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! datatables.net-react */ "./node_modules/datatables.net-react/dist/index.mjs");
+/* harmony import */ var datatables_net_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! datatables.net-bs5 */ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs");
+/* harmony import */ var datatables_net_select_dt__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! datatables.net-select-dt */ "./node_modules/datatables.net-select-dt/js/select.dataTables.mjs");
+/* harmony import */ var datatables_net_responsive_dt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! datatables.net-responsive-dt */ "./node_modules/datatables.net-responsive-dt/js/responsive.dataTables.mjs");
+/* harmony import */ var bootstrap_dist_css_bootstrap_grid_min_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap-grid.min.css */ "./node_modules/bootstrap/dist/css/bootstrap-grid.min.css");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+//import DT from 'datatables.net-dt';
+
+
+
+//import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+var TableDialog = /*#__PURE__*/function (_React$Component) {
+  function TableDialog(props) {
+    var _this;
+    _classCallCheck(this, TableDialog);
+    _this = _callSuper(this, TableDialog, [props]);
+    _this.state = {
+      tableData: _this.props.tableData,
+      columns: _this.props.columns
+    };
+    return _this;
+  }
+  _inherits(TableDialog, _React$Component);
+  return _createClass(TableDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+      datatables_net_react__WEBPACK_IMPORTED_MODULE_1__["default"].use(datatables_net_bs5__WEBPACK_IMPORTED_MODULE_2__["default"]); //https://datatables.net/manual/react    
+
+      _reducer__WEBPACK_IMPORTED_MODULE_6__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_6__.store.getState());
+      });
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      if (storeReducer.tableDataReducer) this.handleTableData(storeReducer.tableDataReducer);
+    }
+  }, {
+    key: "handleTableData",
+    value: function handleTableData(tableData) {
+      this.setState({
+        tableData: tableData
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(datatables_net_react__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        slots: this.props.slots,
+        data: this.state.tableData,
+        columns: this.state.columns
+        //className="display"
+        ,
+        className: "table table-striped table-bordered",
+        options: this.props.options
+      }, this.props.thead);
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+
+/***/ },
+
+/***/ "./resources/js/components/Description/AddDescriptionComponent.jsx"
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Description/AddDescriptionComponent.jsx ***!
+  \*************************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77131,7 +77310,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -77181,11 +77360,16 @@ var AddDescriptionDialog = /*#__PURE__*/function (_React$Component) {
         description: this.state.description
       }).then(function (resp) {
         console.log(resp.data);
+
+        //...!!!table
         _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
-          type: 'CHANGE_STATE_DESCRIPTION',
-          descriptionAfterChange: resp.data
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data
         });
-        self.props.modalClose();
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_MODAL_SHOW',
+          showModalAfterChange: false
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
         var errors = resp.response.data.errors;
@@ -77204,9 +77388,7 @@ var AddDescriptionDialog = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Description"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
         className: "form-control",
@@ -77228,10 +77410,10 @@ var AddDescriptionDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/components/DescriptionComponent.jsx"
-/*!**********************************************************!*\
-  !*** ./resources/js/components/DescriptionComponent.jsx ***!
-  \**********************************************************/
+/***/ "./resources/js/components/Description/DescriptionComponent.jsx"
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/Description/DescriptionComponent.jsx ***!
+  \**********************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77239,20 +77421,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Modal */ "./node_modules/react-bootstrap/esm/Modal.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var datatables_net_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! datatables.net-react */ "./node_modules/datatables.net-react/dist/index.mjs");
-/* harmony import */ var datatables_net_bs5__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! datatables.net-bs5 */ "./node_modules/datatables.net-bs5/js/dataTables.bootstrap5.mjs");
-/* harmony import */ var datatables_net_select_dt__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! datatables.net-select-dt */ "./node_modules/datatables.net-select-dt/js/select.dataTables.mjs");
-/* harmony import */ var datatables_net_responsive_dt__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! datatables.net-responsive-dt */ "./node_modules/datatables.net-responsive-dt/js/responsive.dataTables.mjs");
-/* harmony import */ var bootstrap_dist_css_bootstrap_grid_min_css__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap-grid.min.css */ "./node_modules/bootstrap/dist/css/bootstrap-grid.min.css");
-/* harmony import */ var _AddDescriptionComponent__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./AddDescriptionComponent */ "./resources/js/components/AddDescriptionComponent.jsx");
-/* harmony import */ var _UpdateDescriptionComponent__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./UpdateDescriptionComponent */ "./resources/js/components/UpdateDescriptionComponent.jsx");
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Components_ModalComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Components/ModalComponent */ "./resources/js/components/Components/ModalComponent.jsx");
+/* harmony import */ var _Components_TableComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Components/TableComponent */ "./resources/js/components/Components/TableComponent.jsx");
+/* harmony import */ var _AddDescriptionComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddDescriptionComponent */ "./resources/js/components/Description/AddDescriptionComponent.jsx");
+/* harmony import */ var _UpdateDescriptionComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./UpdateDescriptionComponent */ "./resources/js/components/Description/UpdateDescriptionComponent.jsx");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -77273,14 +77450,6 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
 
 
 
-//import DT from 'datatables.net-dt';
-
-
-
-
-//import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 
 
 var DescriptionDialog = /*#__PURE__*/function (_React$Component) {
@@ -77288,12 +77457,14 @@ var DescriptionDialog = /*#__PURE__*/function (_React$Component) {
     var _this;
     _classCallCheck(this, DescriptionDialog);
     _this = _callSuper(this, DescriptionDialog, [props]);
-    _this.modalClose = _this.modalClose.bind(_this);
+    _this.reset = _this.reset.bind(_this);
     _this.state = {
       variant: null,
-      show: false,
       id: null,
       tableData: window.description,
+      noAddAction: window.description.length,
+      //...!!!table - only here
+
       columns: [{
         data: 'description'
       }, {
@@ -77311,160 +77482,43 @@ var DescriptionDialog = /*#__PURE__*/function (_React$Component) {
           '<a href="#'+ data +'" ><i class="fe fe-delete"></i></a>' :
           data;
       }},
-      */]
-    };
-    return _this;
-  }
-  _inherits(DescriptionDialog, _React$Component);
-  return _createClass(DescriptionDialog, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-      datatables_net_react__WEBPACK_IMPORTED_MODULE_6__["default"].use(datatables_net_bs5__WEBPACK_IMPORTED_MODULE_7__["default"]); //https://datatables.net/manual/react
-
-      _reducer__WEBPACK_IMPORTED_MODULE_13__.store.subscribe(function () {
-        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_13__.store.getState());
-      });
-    }
-  }, {
-    key: "handleStore",
-    value: function handleStore(storeReducer) {
-      this.handleDescription(storeReducer.descriptionReducer);
-    }
-  }, {
-    key: "handleDescription",
-    value: function handleDescription(description) {
-      this.setState({
-        tableData: description
-      });
-    }
-  }, {
-    key: "modalShow",
-    value: function modalShow(variant) {
-      var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      console.log(id);
-      this.setState({
-        variant: variant,
-        show: true,
-        id: id
-      });
-    }
-  }, {
-    key: "preDeleteDescription",
-    value: function preDeleteDescription(id) {
-      var _this3 = this;
-      sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          _this3.deleteDescription(id);
-        }
-      });
-    }
-  }, {
-    key: "deleteDescription",
-    value: function deleteDescription(id) {
-      var self = this;
-      axios__WEBPACK_IMPORTED_MODULE_4___default()["delete"]('/descriptions/' + id).then(function (resp) {
-        console.log(resp.data);
-        self.handleDescription(resp.data);
-      })["catch"](function (resp) {
-        console.log(resp.response);
-        sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
-          icon: 'error',
-          text: resp.response.data.message
-        });
-      });
-    }
-  }, {
-    key: "modalClose",
-    value: function modalClose() {
-      this.setState({
-        show: false
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this4 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        show: this.state.show
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        variant: "secondary",
-        onClick: this.modalClose
-      }, "Close")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Modal__WEBPACK_IMPORTED_MODULE_3__["default"].Body, null, this.state.variant == 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_AddDescriptionComponent__WEBPACK_IMPORTED_MODULE_11__["default"], {
-        modalClose: this.modalClose
-      }), this.state.variant == 'update' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_UpdateDescriptionComponent__WEBPACK_IMPORTED_MODULE_12__["default"], {
-        modalClose: this.modalClose,
-        id: this.state.id
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        id: "page-wrapper"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "container-fluid pt-5"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "row page-header"
-      }, !this.state.tableData.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "row page-header"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "col-lg-12"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "fa fa-plus fa-2x my-plus-icon",
-        "aria-hidden": "true",
-        onClick: function onClick() {
-          _this4.modalShow('add');
-        }
-      }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "my-plus-text"
-      }, "Add a new Description "))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(datatables_net_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        slots: {
-          0: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-              className: "form-control",
-              rows: "10",
-              value: data,
-              disabled: true
-            }, data);
-          },
-          2: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-pencil-square fa-2x my-pencil-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.modalShow('update', data);
-              }
-            });
-          },
-          3: function _(data, row) {
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              className: "fa fa-trash fa-2x my-trash-icon",
-              "aria-hidden": "true",
-              onClick: function onClick() {
-                _this4.preDeleteDescription(data);
-              }
-            });
-          }
+      */],
+      slots: {
+        0: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
+            className: "form-control",
+            rows: "10",
+            value: data,
+            disabled: true
+          }, data);
         },
-        data: this.state.tableData,
-        columns: this.state.columns
-        //className="display"
-        ,
-        className: "table table-striped table-bordered",
-        options: {
-          responsive: true,
-          select: true,
-          paging: false,
-          info: false,
-          searching: false
+        2: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-pencil-square fa-2x my-pencil-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.modalShow('update', data);
+            }
+          });
+        },
+        3: function _(data, row) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "fa fa-trash fa-2x my-trash-icon",
+            "aria-hidden": "true",
+            onClick: function onClick() {
+              _this.preDeleteDescription(data);
+            }
+          });
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
+      },
+      options: {
+        responsive: true,
+        select: true,
+        paging: false,
+        info: false,
+        searching: false
+      },
+      thead: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
         style: {
           width: '75%'
         }
@@ -77482,7 +77536,128 @@ var DescriptionDialog = /*#__PURE__*/function (_React$Component) {
         style: {
           width: '5%'
         }
-      }, "delete"))))))));
+      }, "delete")))
+    };
+    return _this;
+  }
+  _inherits(DescriptionDialog, _React$Component);
+  return _createClass(DescriptionDialog, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+      //because this.state.noAddAction
+      _reducer__WEBPACK_IMPORTED_MODULE_8__.store.subscribe(function () {
+        return _this2.handleStore(_reducer__WEBPACK_IMPORTED_MODULE_8__.store.getState());
+      }); //...!!!table - only here
+    }
+  }, {
+    key: "handleStore",
+    value: function handleStore(storeReducer) {
+      //...!!!table - only here
+      if (storeReducer.tableDataReducer) {
+        this.setState({
+          noAddAction: storeReducer.tableDataReducer.length
+        });
+      }
+    }
+  }, {
+    key: "modalShow",
+    value: function modalShow(variant) {
+      var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      //console.log(id);
+
+      this.setState({
+        variant: variant,
+        id: id
+      });
+    }
+  }, {
+    key: "preDeleteDescription",
+    value: function preDeleteDescription(id) {
+      var _this3 = this;
+      sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this3.deleteDescription(id);
+        }
+      });
+    }
+  }, {
+    key: "deleteDescription",
+    value: function deleteDescription(id) {
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_2___default()["delete"]('/descriptions/' + id).then(function (resp) {
+        console.log(resp.data);
+
+        //...!!!table
+        _reducer__WEBPACK_IMPORTED_MODULE_8__.store.dispatch({
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data
+        });
+      })["catch"](function (resp) {
+        console.log(resp.response);
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
+          icon: 'error',
+          text: resp.response.data.message
+        });
+      });
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.setState({
+        variant: null,
+        id: null
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.variant == 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_AddDescriptionComponent__WEBPACK_IMPORTED_MODULE_6__["default"], null)
+      }), this.state.variant == 'update' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_ModalComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        reset: this.reset,
+        component: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_UpdateDescriptionComponent__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          id: this.state.id
+        })
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        id: "page-wrapper"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "container-fluid pt-5"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "row page-header"
+      }, !this.state.noAddAction ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "row page-header"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "col-lg-12"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "fa fa-plus fa-2x my-plus-icon",
+        "aria-hidden": "true",
+        onClick: function onClick() {
+          _this4.modalShow('add');
+        }
+      }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: "my-plus-text"
+      }, "Add a new Description "))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "row"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Components_TableComponent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        tableData: this.state.tableData
+        //actionAdd={this.actionAdd} 
+        ,
+        columns: this.state.columns,
+        slots: this.state.slots,
+        options: this.state.options,
+        thead: this.state.thead
+      })))));
     }
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
@@ -77491,10 +77666,10 @@ root.render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElem
 
 /***/ },
 
-/***/ "./resources/js/components/UpdateDescriptionComponent.jsx"
-/*!****************************************************************!*\
-  !*** ./resources/js/components/UpdateDescriptionComponent.jsx ***!
-  \****************************************************************/
+/***/ "./resources/js/components/Description/UpdateDescriptionComponent.jsx"
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/Description/UpdateDescriptionComponent.jsx ***!
+  \****************************************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77508,7 +77683,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../reducer */ "./resources/js/components/reducer.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
@@ -77578,11 +77753,16 @@ var UpdateDescriptionDialog = /*#__PURE__*/function (_React$Component) {
         description: this.state.description
       }).then(function (resp) {
         console.log(resp.data);
+
+        //...!!!table
         _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
-          type: 'CHANGE_STATE_DESCRIPTION',
-          descriptionAfterChange: resp.data
+          type: 'CHANGE_STATE_TABLEDATA',
+          tableDataAfterChange: resp.data
         });
-        self.props.modalClose();
+        _reducer__WEBPACK_IMPORTED_MODULE_3__.store.dispatch({
+          type: 'CHANGE_MODAL_SHOW',
+          showModalAfterChange: false
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
         var errors = resp.response.data.errors;
@@ -77601,9 +77781,7 @@ var UpdateDescriptionDialog = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-        role: "form"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, "Description"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
         className: "form-control",
@@ -77626,10 +77804,10 @@ var UpdateDescriptionDialog = /*#__PURE__*/function (_React$Component) {
 
 /***/ },
 
-/***/ "./resources/js/reducer.js"
-/*!*********************************!*\
-  !*** ./resources/js/reducer.js ***!
-  \*********************************/
+/***/ "./resources/js/components/reducer.js"
+/*!********************************************!*\
+  !*** ./resources/js/components/reducer.js ***!
+  \********************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77643,17 +77821,13 @@ var reducer = function reducer() {
   var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
   var action = arguments.length > 1 ? arguments[1] : undefined;
   switch (action.type) {
-    case 'CHANGE_STATE_PROMPTS':
+    case 'CHANGE_MODAL_SHOW':
       return {
-        promptsReducer: action.promptsAfterChange
+        showModalReducer: action.showModalAfterChange
       };
-    case 'CHANGE_STATE_PROJECTS':
+    case 'CHANGE_STATE_TABLEDATA':
       return {
-        projectsReducer: action.projectsAfterChange
-      };
-    case 'CHANGE_STATE_DESCRIPTION':
-      return {
-        descriptionReducer: action.descriptionAfterChange
+        tableDataReducer: action.tableDataAfterChange
       };
     //...other events... 
     default:
@@ -77775,7 +77949,7 @@ var __webpack_exports__ = {};
   !*** ./resources/js/description.js ***!
   \*************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_DescriptionComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/DescriptionComponent */ "./resources/js/components/DescriptionComponent.jsx");
+/* harmony import */ var _components_Description_DescriptionComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Description/DescriptionComponent */ "./resources/js/components/Description/DescriptionComponent.jsx");
 
 })();
 

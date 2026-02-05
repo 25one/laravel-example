@@ -3,7 +3,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import {store} from '../reducer'
 
-export default class AddProjectDialog extends React.Component {
+export default class UpdateProjectDialog extends React.Component {
 
    constructor(props) {
       super(props);
@@ -11,12 +11,13 @@ export default class AddProjectDialog extends React.Component {
       this.handleTitleProject = this.handleTitleProject.bind(this);
 
       this.state = {
+         id: null,
          titleProject: '',
       }
    }
 
    componentDidMount() {
-      //...  
+      this.getProject();  
    } 
 
    handleTitleProject(event) {
@@ -25,17 +26,39 @@ export default class AddProjectDialog extends React.Component {
       }); 
    }
 
-   addProject() {
+   getProject() {
          let self = this;
 
          axios
-         .post('/projects', {titleProject: this.state.titleProject})
+         .get('/projects/' + this.props.id)
             .then(function (resp) {
                console.log(resp.data);
 
-               //store.dispatch({ type: 'CHANGE_STATE_PROJECTS', projectsAfterChange: resp.data });
+               self.setState({
+                  id: resp.data.id, 
+                  titleProject: resp.data.title,                
+               });
+            })
+            .catch(function (resp) {
+               console.log(resp.response);
 
-               location.href = '/project/' + resp.data + '/list-prompts';
+               Swal.fire({
+                  icon: 'error',
+                  text: resp.response.data.message,
+               });
+            });
+   } 
+
+   updateProject() {
+         let self = this;
+
+         axios
+         .put('/projects/' + this.state.id, {titleProject: this.state.titleProject})
+            .then(function (resp) {
+               console.log(resp.data);
+
+               store.dispatch({ type: 'CHANGE_STATE_TABLEDATA', tableDataAfterChange: resp.data });
+               store.dispatch({ type: 'CHANGE_MODAL_SHOW', showModalAfterChange: false });
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -55,21 +78,15 @@ export default class AddProjectDialog extends React.Component {
 
    render() {
       return (
-         <form role="form">
+         <div>           
             <div className="form-group">
-                  <label>Title of Project</label>
-                  <input className="form-control" onChange={this.handleTitleProject} />
+                  <label>Title of project</label>
+                  <input className="form-control" onChange={this.handleTitleProject} value={this.state.titleProject} />
             </div>
-            {/* 
-            <div className="form-group">
-                  <label>File input</label>
-                  <input type="file" />
-            </div> 
-            */} 
             <div className="form-group pt-2">
-               <button type="button" className="btn btn-primary" onClick={() => this.addProject()}>Submit</button>
+               <button type="button" className="btn btn-primary" onClick={() => this.updateProject()}>Submit</button>
             </div>                                                                                 
-         </form>
+         </div>
       );    	
    }
 

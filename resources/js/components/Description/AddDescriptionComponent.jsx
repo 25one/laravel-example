@@ -3,7 +3,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import {store} from '../reducer'
 
-export default class UpdateDescriptionDialog extends React.Component {
+export default class AddDescriptionDialog extends React.Component {
 
    constructor(props) {
       super(props);
@@ -11,13 +11,12 @@ export default class UpdateDescriptionDialog extends React.Component {
       this.handleDescription = this.handleDescription.bind(this);
 
       this.state = {
-         id: null,
          description: '',
       }
    }
 
    componentDidMount() {
-      this.getDescription();  
+      //...  
    } 
 
    handleDescription(event) {
@@ -26,42 +25,17 @@ export default class UpdateDescriptionDialog extends React.Component {
       }); 
    }
 
-   getDescription() {
+   addDescription() {
          let self = this;
 
          axios
-         .get('/descriptions/' + this.props.id)
+         .post('/descriptions', {description: this.state.description})
             .then(function (resp) {
                console.log(resp.data);
 
-               self.setState({
-                  id: resp.data.id, 
-                  description: resp.data.description,                  
-               });
-            })
-            .catch(function (resp) {
-               console.log(resp.response);
-
-               Swal.fire({
-                  icon: 'error',
-                  text: resp.response.data.message,
-               });
-
-               self.props.modalClose();
-            });
-   } 
-
-   updateDescription() {
-         let self = this;
-
-         axios
-         .put('/descriptions/' + this.state.id, {description: this.state.description})
-            .then(function (resp) {
-               console.log(resp.data);
-
-               store.dispatch({ type: 'CHANGE_STATE_DESCRIPTION', descriptionAfterChange: resp.data });
-
-               self.props.modalClose();
+               //...!!!table
+               store.dispatch({ type: 'CHANGE_STATE_TABLEDATA', tableDataAfterChange: resp.data });
+               store.dispatch({ type: 'CHANGE_MODAL_SHOW', showModalAfterChange: false });
             })
             .catch(function (resp) {
                console.log(resp.response);
@@ -81,15 +55,15 @@ export default class UpdateDescriptionDialog extends React.Component {
 
    render() {
       return (
-         <form role="form">
+         <div>
             <div className="form-group">
                   <label>Description</label>
-                  <textarea className="form-control" rows="7" value={this.state.description} onChange={this.handleDescription}></textarea>
+                  <textarea className="form-control" rows="7" onChange={this.handleDescription}></textarea>
             </div>
             <div className="form-group pt-2">
-               <button type="button" className="btn btn-primary" onClick={() => this.updateDescription()}>Submit</button>
+               <button type="button" className="btn btn-primary" onClick={() => this.addDescription()}>Submit</button>
             </div>                                                                                 
-         </form>
+         </div>
       );    	
    }
 

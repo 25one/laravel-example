@@ -6,7 +6,7 @@ use App\Services\AI\AIBase;
 class GenAI extends AIBase {
 
     public function getApiKey() {
-       return ['api_key' => config('services.ai_api_key.genai')];
+       return ["api_key" => config('services.ai_api_key.genai')];
     }  
 
 }

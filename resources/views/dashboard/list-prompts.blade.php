@@ -1,12 +1,7 @@
 @extends('dashboard.layout')
 
 @section('css')
-{{-- 
-<!-- DataTables CSS -->
-<link href="{{ asset('css/dataTables/dataTables.bootstrap.css') }}" rel="stylesheet">
-<!-- DataTables Responsive CSS -->
-<link href="{{ asset('css/dataTables/dataTables.responsive.css') }}" rel="stylesheet">
---}}
+
 @endsection
 
 @section('main')
@@ -23,13 +18,7 @@
 @endsection
 
 @section('js')
-<!-- DataTables JavaScript -->
-{{-- 
-<script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
---}}
-
-<script src="{{ mix('js/listPrompts.js') }}"></script>
+<script src="{{ mix('js/prompt.js') }}"></script>
 
 <script>
 $(document).ready(function(){

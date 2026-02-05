@@ -15,11 +15,11 @@ mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
 
-mix.js('resources/js/listProjects.js', 'public/js');
+mix.js('resources/js/project.js', 'public/js');
 
-mix.js('resources/js/listPrompts.js', 'public/js');
+mix.js('resources/js/prompt.js', 'public/js');
 
-mix.js('resources/js/settings.js', 'public/js');
+mix.js('resources/js/setting.js', 'public/js');
 
 mix.js('resources/js/description.js', 'public/js');
 

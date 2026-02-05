@@ -64,12 +64,12 @@ export default class ExecuteProjectDialog extends React.Component {
  
 
       for (let prompt of this.state.promptsProject) {
-         if (prompt.content.includes('#prompt#')) {
+         if (prompt.content.includes('#beforeprompt#')) {
              //console.log(prompt.content);
 
              //console.log(this.result);
 
-             prompt.content = prompt.content.replace(/#prompt#/, this.result);
+             prompt.content = prompt.content.replace(/#beforeprompt#/, this.result);
 
              console.log(prompt.content);
          }  
@@ -81,22 +81,44 @@ export default class ExecuteProjectDialog extends React.Component {
          await axios
          .post('/execute-prompt', {prompt: prompt.content})
             .then(function (resp) {
-               console.log(resp.data);
+               let errorPython = null;
 
-               self.result = resp.data; 
+               if (Array.isArray(resp.data)) {
+                  self.result = JSON.stringify(resp.data)
+               } else if (typeof resp.data === 'object' && resp.data !== null && 'errorPython' in resp.data) {
+                  errorPython = resp.data.errorPython.message;
+               } else {
+                  self.result = resp.data;
+               }
 
-               self.setState({
-                  loader: false, 
-                  executablePrompt: '',
-                  resultProject: resp.data,                  
-               });               
+               //console.log(self.result);
+               //console.log(errorPython);
+
+               if (errorPython) {
+                  self.setState({
+                     loader: false, 
+                     resultProject: '',
+                  });                  
+                  Swal.fire({
+                     icon: 'error',
+                     //text: errorPython,
+                     text: "There is something wrong. Please try again later.", 
+                  });
+               } else {
+                  self.setState({
+                     loader: false, 
+                     executablePrompt: '',
+                     resultProject: self.result                 
+                  });  
+               }              
             })
             .catch(function (resp) {
                console.log(resp.response);
 
                Swal.fire({
                   icon: 'error',
-                  text: resp.response.data.message,
+                  //text: resp.response.data.message,
+                  text: "There is something wrong. Please try again later.",
                });
 
                self.props.modalClose();
@@ -107,7 +129,7 @@ export default class ExecuteProjectDialog extends React.Component {
 
    render() {
       return (         
-         <form role="form">
+         <div>
             <div className="form-group">
                   <label>Token-API of project </label>
                   <a href="#" className="form-control btn btn-link" data-toggle="tooltip" title="click to copy to clipboard" value="copied..." onClick={(event) => {event.preventDefault();}} data-clipboard-text={this.state.tokenProject}>{this.state.tokenProject}</a>
@@ -153,7 +175,7 @@ export default class ExecuteProjectDialog extends React.Component {
             <div className="form-group">
                <button type="button" className="btn btn-primary" onClick={() => this.executeProject()}>Submit</button>
             </div>                                                                                 
-         </form>
+         </div>
       );    	
    }
 
