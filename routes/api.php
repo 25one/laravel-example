@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+Route::get('/verified/{api_token}', [App\Http\Controllers\Auth\RegisterController::class, 'emailVerification'])->name('verified');
+
 Route::post('/widget-chat-question', [App\Http\Controllers\ApiController::class, 'widgetChatQuestion'])->middleware('auth:api');
 
 Route::post('/prompt-execute', [App\Http\Controllers\ApiController::class, 'apiPromptExecute'])->middleware('auth:api');

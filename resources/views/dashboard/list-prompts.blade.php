@@ -21,6 +21,7 @@
 <script src="{{ mix('js/prompt.js') }}"></script>
 
 <script>
+/*    
 $(document).ready(function(){
     //copy to clipboard
     $(function (e) { 
@@ -40,6 +41,6 @@ $(document).ready(function(){
             .tooltip('show');
     }     
 });   
-        
+*/        
 </script>
 @endsection

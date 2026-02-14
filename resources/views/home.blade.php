@@ -12,23 +12,32 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex"><i class="bi-window m-auto text-primary"></i></div>
-                            <h3>Fully Responsive</h3>
-                            <p class="lead mb-0">This theme will look great on any device, no matter the size!</p>
+                            <div class="features-icons-icon d-flex">
+                            <!-- <i class="bi-window m-auto text-primary"></i> -->
+                            <i class="bi bi-diagram-3 m-auto text-primary"></i> 
+                            </div>
+                            <h3>Prompt Chains</h3>
+                            <p class="lead mb-0">Create prompt chains for your business processes</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex"><i class="bi-layers m-auto text-primary"></i></div>
-                            <h3>Bootstrap 5 Ready</h3>
-                            <p class="lead mb-0">Featuring the latest build of the new Bootstrap 5 framework!</p>
+                            <div class="features-icons-icon d-flex">
+                            <!-- <i class="bi-layers m-auto text-primary"></i> -->
+                            <i class="bi bi-play-btn m-auto text-primary"></i> 
+                            </div>
+                            <h3>API access</h3>
+                            <p class="lead mb-0">Use API access for execution prompt chains in your application</p>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="features-icons-item mx-auto mb-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex"><i class="bi-terminal m-auto text-primary"></i></div>
-                            <h3>Easy to Use</h3>
-                            <p class="lead mb-0">Ready to use with your own content, or customize the source files!</p>
+                            <div class="features-icons-icon d-flex">
+                            <!-- <i class="bi-terminal m-auto text-primary"></i>-->
+                             <i class="bi bi-chat m-auto text-primary"></i>
+                            </div>
+                            <h3>AI chat</h3>
+                            <p class="lead mb-0">Enable AI chat for your customers in your application</p>
                         </div>
                     </div>
                 </div>
@@ -38,29 +47,30 @@
         <section class="showcase">
             <div class="container-fluid p-0">
                 <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-1.jpg')"></div>
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-1-new.jpg')"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                        <h2>Fully Responsive Design</h2>
-                        <p class="lead mb-0">When you use a theme created by Start Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!</p>
+                        <h2>Prompts-Project-Dashboard</h2>
+                        <p class="lead mb-0">To automate your business processes, create prompts and combine them into chains (project) (for more information, see Manual and API Settings on the Dashboard page after login/register)</p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-2.jpg')"></div>
+                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-2-new.jpg')"></div>
                     <div class="col-lg-6 my-auto showcase-text">
-                        <h2>Updated For Bootstrap 5</h2>
-                        <p class="lead mb-0">Newly improved, and full of great utility classes, Bootstrap 5 is leading the way in mobile responsive web development! All of the themes on Start Bootstrap are now using Bootstrap 5!</p>
+                        <h2>API-access to your prompts</h2>
+                        <p class="lead mb-0">Use the API in your project to access your prompts, automating routine tasks (e.g., AI-powered text product description generation) (for more information, see Manual and API Settings on the Dashboard page after login/register)</p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-3.jpg')"></div>
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-3-new.jpg')"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                        <h2>Easy to Use & Customize</h2>
-                        <p class="lead mb-0">Landing Page is just HTML and CSS with a splash of SCSS for users who demand some deeper customization options. Out of the box, just add your content and images, and your new landing page will be ready to go!</p>
+                        <h2>AI-сhat in your project</h2>
+                        <p class="lead mb-0">Connect and use AI-chat on your project pages. It works with your company's information but doesn't require human resources (for more information, see Manual and API Settings on the Dashboard page after login/register)</p>
                     </div>
                 </div>
             </div>
         </section>
         <!-- Testimonials-->
+        <!-- 
         <section class="testimonials text-center bg-light">
             <div class="container">
                 <h2 class="mb-5">What people are saying...</h2>
@@ -89,6 +99,7 @@
                 </div>
             </div>
         </section>
+        --> 
         <!-- Call to Action-->
         <section class="call-to-action text-white text-center" id="signup">
             <div class="container position-relative">
@@ -106,12 +117,15 @@
                         <form class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">
                             <!-- Email address input-->
                             <div class="row">
+                                <!--
                                 <div class="col">
                                     <input class="form-control form-control-lg" id="emailAddressBelow" type="email" placeholder="Email Address" data-sb-validations="required,email" />
                                     <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:required">Email Address is required.</div>
                                     <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:email">Email Address Email is not valid.</div>
                                 </div>
                                 <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                                -->
+                                <div class="col text-center"><a class="btn btn-primary btn-lg" href="{{route('register')}}">Sign Up</a></div>
                             </div>
                             <!-- Submit success message-->
                             <!---->

@@ -15,10 +15,13 @@ class Prompts extends Migration
     {
         Schema::create('prompts', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('project_id')->unsigned()->index();
+            //$table->integer('project_id')->unsigned()->index();
+            $table->foreignId('project_id')->constrained()->onDelete('cascade');
+            $table->integer('number');
             $table->string('title');             
             $table->longText('content'); 
-            $table->string('token');            
+            $table->string('token'); 
+            $table->enum('active', [0, 1])->default(1);           
             $table->timestamps();                              
         }); 
     }

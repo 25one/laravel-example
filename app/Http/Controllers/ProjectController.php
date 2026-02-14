@@ -40,6 +40,7 @@ class ProjectController extends Controller
     {
        $this->authorize('manage', $project);
 
+       /*
        try {
          \DB::transaction(function () use ($project) {
             $project->delete();
@@ -49,6 +50,9 @@ class ProjectController extends Controller
        } catch (\Exception $e) {
          return $e;
        }
+       */
+      
+      $project->delete(); //!!!$table->foreignId('project_id')->constrained()->onDelete('cascade') 
 
        return $this->index();       
     } 

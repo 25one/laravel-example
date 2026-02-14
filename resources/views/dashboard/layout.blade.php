@@ -84,7 +84,7 @@
                         </li>                        
                         <li>
                             <a href="{{route('api-settings')}}">
-                                <i class="fas fa-table"></i>API Settings</a>
+                                <i class="fas fa-table text-danger"></i><span class="text-danger">Manual and API Settings</span></a>
                         </li>
                         <!--
                         <li>
@@ -202,7 +202,7 @@
                         </li>                         
                         <li>
                             <a href="{{route('api-settings')}}">
-                                <i class="fas fa-table"></i>API Settings</a>
+                                <i class="fas fa-table text-danger"></i><span class="text-danger">Manual and API Settings</span></a>
                         </li>
                         <!--
                         <li>
@@ -434,15 +434,19 @@
                                             -->
                                             <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
-                                                    <a href="#">
+                                                    <a href="{{route('link-change-password')}}">
                                                         <i class="zmdi zmdi-account"></i>Change password</a>
                                                 </div>
                                                 @if (auth()->user()->role === 'admin')
                                                 <div class="account-dropdown__item">
                                                     <a href="{{route('settings')}}">
-                                                        <i class="zmdi zmdi-settings"></i>Setting</a>
+                                                        <i class="zmdi zmdi-settings"></i>System settings</a>
                                                 </div>
                                                 @endif
+                                                <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-delete text-danger"></i><span class="remove-account"></span></a>
+                                                </div>                                                
                                                 <!--
                                                 <div class="account-dropdown__item">
                                                     <a href="#">
@@ -501,6 +505,9 @@
     <script src="{{ asset('js/swiper-bundle-12.0.3.min.js') }}"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
     <script src="{{ asset('js/modern-plugins.js') }}"></script>
+
+    <script src="{{ mix('js/remove.js') }}"></script>
+
     @yield('js')
 </body>
 

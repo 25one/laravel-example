@@ -14,8 +14,10 @@ class Projects extends Migration
     public function up()
     {
         Schema::create('projects', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();
+            //$table->increments('id');
+            $table->id(); //!!!for $table->foreignId('project_id')->constrained()->onDelete('cascade'); (like users)
+            //$table->integer('user_id')->unsigned()->index();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('token');            
             $table->timestamps();                              

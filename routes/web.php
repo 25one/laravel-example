@@ -26,18 +26,27 @@ Route::middleware('auth')->group(function () {
     //    return redirect(route('list-projects'));
     //});
 
-    Route::get('/list-projects', [App\Http\Controllers\DashboardController::class, 'listProjects'])->name('list-projects');
-    Route::resource('projects', 'App\Http\Controllers\ProjectController');
-    
-    Route::get('/project/{idProject}/list-prompts', [App\Http\Controllers\DashboardController::class, 'listPrompts'])->name('list-prompts');
-    Route::resource('prompts', 'App\Http\Controllers\PromptController');
-    Route::post('/change-active-prompt', [App\Http\Controllers\PromptController::class, 'changeActivePrompt'])->name('change-active-prompt');
-    Route::post('/execute-prompt', [App\Http\Controllers\PromptController::class, 'executePrompt'])->name('execute-prompt');    
+    Route::get('/linkemailverification/{again}', [App\Http\Controllers\Auth\RegisterController::class, 'sendLinkEmailVerification'])->name('linkemailverification');
 
-    Route::get('/description', [App\Http\Controllers\DashboardController::class, 'description'])->name('description');
-    Route::resource('descriptions', 'App\Http\Controllers\DescriptionController');
+    Route::get('/link-change-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'linkChangePassword'])->name('link-change-password');
+    Route::post('/change-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'changePassword'])->name('change-password');
 
-    Route::get('/api-settings', [App\Http\Controllers\DashboardController::class, 'apiSettings'])->name('api-settings');
+    Route::post('/remove-account', [App\Http\Controllers\UserController::class, 'removeAccount'])->name('remove-account');    
+
+    Route::middleware('verified')->group(function () {
+        Route::get('/list-projects', [App\Http\Controllers\DashboardController::class, 'listProjects'])->name('list-projects');
+        Route::resource('projects', 'App\Http\Controllers\ProjectController');
+        
+        Route::get('/project/{idProject}/list-prompts', [App\Http\Controllers\DashboardController::class, 'listPrompts'])->name('list-prompts');
+        Route::resource('prompts', 'App\Http\Controllers\PromptController');
+        Route::post('/change-active-prompt', [App\Http\Controllers\PromptController::class, 'changeActivePrompt'])->name('change-active-prompt');
+        Route::post('/execute-prompt', [App\Http\Controllers\PromptController::class, 'executePrompt'])->name('execute-prompt');    
+
+        Route::get('/description', [App\Http\Controllers\DashboardController::class, 'description'])->name('description');
+        Route::resource('descriptions', 'App\Http\Controllers\DescriptionController');
+
+        Route::get('/api-settings', [App\Http\Controllers\DashboardController::class, 'apiSettings'])->name('api-settings');
+    });
 
     Route::get('/404', [App\Http\Controllers\DashboardController::class, 'view404'])->name('404');
 });

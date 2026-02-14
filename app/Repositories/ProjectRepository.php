@@ -61,10 +61,12 @@ class ProjectRepository
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    /* only DB::transaction
     public function deleteProjectPrompts($idProject)
     {
        Prompt::where('project_id', $idProject)->delete();
-    }     
+    }   
+    */     
 
     /**
      * Update item to Project-model.

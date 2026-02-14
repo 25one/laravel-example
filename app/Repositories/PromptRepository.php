@@ -4,7 +4,8 @@ namespace App\Repositories;
 
 use App\Models\ {
     Project,
-    Prompt
+    Prompt,
+    Statistic
 };
 use App\Repositories\ModelRepository;
 use App\Services\AI\OpenAI;
@@ -21,16 +22,18 @@ class PromptRepository
      */
     protected $modelProject;
     protected $modelPrompt;
+    protected $modelStatistic;
     protected $modelRepository;
 
     /**
      * Create a new PromptRepository instance.
      *
      */
-    public function __construct(Project $project, Prompt $prompt, ModelRepository $repositoryModel)
+    public function __construct(Project $project, Prompt $prompt, Statistic $statistic, ModelRepository $repositoryModel)
     {
         $this->modelProject = $project;
         $this->modelPrompt = $prompt;
+        $this->modelStatistic = $statistic;
         $this->modelRepository = $repositoryModel;
 
     }
@@ -108,10 +111,32 @@ class PromptRepository
             $llm->variantModel = $selectedModel->bottommodels->first()->model;
             $llm->prompt = $prompt;
 
-            return $llm->funcGet();
+            $result = $llm->funcGet(); 
+
+            $this->statistic($prompt, $result);
+
+            return $result;
          } catch (\Exception $e) {
             return $e->getMessage();
          }
+    } 
+    
+    /**
+     * Change active for prompt
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function statistic($prompt, $result)
+    {   
+       $this->modelStatistic->user_id = auth()->user()->id;
+       $this->modelStatistic->user_email = auth()->user()->email;
+       $this->modelStatistic->prompt_content = $prompt;
+
+       if (is_object($result) && property_exists($result, 'errorPython')) {
+          $this->modelStatistic->prompt_error = $result->errorPython;
+       }
+
+       $this->modelStatistic->save();
     }     
 
 }

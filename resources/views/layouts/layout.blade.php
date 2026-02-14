@@ -52,18 +52,30 @@
                                             </a>
 
                                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                                {{-- @verified --}}
                                                 <a class="dropdown-item" href="{{ route('list-projects') }}">
-                                                    Dashboard
+                                                    <strong @verified class="text-success" @else class="text-primary" @endverified>Dashboard</strong>
                                                 </a>
+                                                {{-- @endverified --}}
+                                                <a class="dropdown-item" href="{{ route('link-change-password') }}">
+                                                    Change password
+                                                </a>
+                                                @admin
+                                                <a class="dropdown-item" href="{{ route('settings') }}">
+                                                    System settings
+                                                </a>  
+                                                @endadmin 
+                                                <a class="dropdown-item remove-account" href="#">
+                                                </a>                                                                                           
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                                     onclick="event.preventDefault();
                                                                     document.getElementById('logout-form').submit();">
                                                         {{ __('Logout') }}
-                                                    </a>
+                                                </a>
 
-                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                        @csrf
-                                                    </form>
+                                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                                    @csrf
+                                                </form>
                                             </div>
                                         </li>
                                     </ul>
@@ -80,7 +92,7 @@
                                         <div class="account-dropdown js-dropdown">
                                             <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
-                                                    <a href="#">
+                                                    <a href="{{route('link-change-password')}}">
                                                         <i class="zmdi zmdi-account"></i>Change password</a>
                                                 </div>
                                                 @if (auth()->user()->role === 'admin')
@@ -118,6 +130,25 @@
                 </div>
             </div>
         </nav>
+
+      @if (session('notEmailVerified'))
+          <div class="alert alert-danger" role="alert">
+              {{ session('notEmailVerified') }} <a href="{{route('linkemailverification', [true])}}">send link to your email again</a>
+          </div>
+      @endif
+
+      @if (session('verifiedRequiredEmail'))
+          <div class="alert alert-success" role="alert">
+              {{ session('verifiedRequiredEmail') }}
+          </div>
+      @endif 
+
+      @if (session('verifiedRequiredNotEmail'))
+          <div class="alert alert-danger" role="alert">
+              {{ session('verifiedRequiredNotEmail') }}
+          </div>
+      @endif       
+
         <!-- Masthead-->
         <header class="masthead">
             <div class="container position-relative">
@@ -125,7 +156,7 @@
                     <div class="col-xl-6">
                         <div class="text-center text-white">
                             <!-- Page heading-->
-                            <h1 class="mb-5">Generate more leads with a professional landing page!</h1>
+                            <h1 class="mb-5">Start to use AI models in your business</h1>
                             <!-- Signup form-->
                             <!-- * * * * * * * * * * * * * * *-->
                             <!-- * * SB Forms Contact Form * *-->
@@ -137,12 +168,15 @@
                             <form class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
                                 <!-- Email address input-->
                                 <div class="row">
+                                    <!--
                                     <div class="col">
                                         <input class="form-control form-control-lg" id="emailAddress" type="email" placeholder="Email Address" data-sb-validations="required,email" />
                                         <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Email Address is required.</div>
                                         <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:email">Email Address Email is not valid.</div>
                                     </div>
                                     <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                                    -->
+                                    <div class="col text-center"><a class="btn btn-primary btn-lg" href="{{route('register')}}">Sign Up</a></div>
                                 </div>
                                 <!-- Submit success message-->
                                 <!---->
@@ -165,7 +199,7 @@
                     </div>
                 </div>
             </div>
-        </header>
+        </header>  
 
         @yield('main')
 
@@ -174,6 +208,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
+                        <!--
                         <ul class="list-inline mb-2">
                             <li class="list-inline-item"><a href="#!">About</a></li>
                             <li class="list-inline-item">⋅</li>
@@ -183,18 +218,22 @@
                             <li class="list-inline-item">⋅</li>
                             <li class="list-inline-item"><a href="#!">Privacy Policy</a></li>
                         </ul>
-                        <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2023. All Rights Reserved.</p>
+                        -->
+                        <p>&copy; {{ now()->year }} <a target="_blank" href="https://fullstack.25one.com.ua/experiences">Full-Stack school</a> by Oleksandr Koskin. All rights reserved. <br>Developed with <i class="bi bi-heart-fill"></i> in <i class="fab fa-laravel"></i>Laravel and React<br>Contact me +380681072861 (<i class="bi bi-telegram"></i>)</p>
+                        <!-- <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2023. All Rights Reserved.</p> -->
                     </div>
                     <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
                         <ul class="list-inline mb-0">
+                            <!--
                             <li class="list-inline-item me-4">
-                                <a href="#!"><i class="bi-facebook fs-3"></i></a>
+                                <a target="_blank" href="https://www.facebook.com/OleksandrKoskin"><i class="bi-facebook fs-3"></i></a>
                             </li>
+                            -->
                             <li class="list-inline-item me-4">
-                                <a href="#!"><i class="bi-twitter fs-3"></i></a>
+                                <a target="_blank" href="https://www.linkedin.com/in/alexander-koskin-100169"><i class="bi bi-linkedin fs-3"></i></a>
                             </li>
                             <li class="list-inline-item">
-                                <a href="#!"><i class="bi-instagram fs-3"></i></a>
+                                <a target="_blank" href="https://www.youtube.com/channel/UCtOvglhwrJMbSyL1cFLBm0A?view_as=subscriber"><i class="bi bi-youtube fs-3"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -210,6 +249,9 @@
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <!-- <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> -->
+
+        <script src="{{ mix('js/remove.js') }}"></script>
+
         @yield('js')
     </body>
 </html>

@@ -119,11 +119,13 @@ class SettingsDialog extends React.Component {
 
                     <div className="row page-header">
                         <div className="col-lg-12">
-                            <h3>Settings</h3>
+                            <h3>System settings</h3>
                         </div>
                     </div>
 
+                     <hr />
                      <div className="row">
+                        <h4>AI Models</h4>
                         <div className="col-lg-6"> 
                            <form> 
                               {this.state.topmodels.map((topmodel, key) =>

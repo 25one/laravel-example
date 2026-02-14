@@ -40565,7 +40565,7 @@ var ReactDialog = /*#__PURE__*/function (_React$Component) {
     _this = _callSuper(this, ReactDialog, [props]);
     _this.handleQuestion = _this.handleQuestion.bind(_this);
     _this.state = {
-      api_token: window.token,
+      api_token: window.api_token,
       question: '',
       answer: '',
       loader: false
@@ -40641,8 +40641,8 @@ var ReactDialog = /*#__PURE__*/function (_React$Component) {
         } else if ('message' in resp.response.data) {
           sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
             icon: 'error',
-            //text: resp.response.data.message,
-            text: "There is something wrong. Please try again later."
+            text: resp.response.data.message
+            //text: "There is something wrong. Please try again later.",
           });
         }
       });

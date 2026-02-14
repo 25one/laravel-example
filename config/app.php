@@ -232,4 +232,6 @@ return [
 
     ],
 
+    'adminemail' => '25onealexalex@gmail.com',
+
 ];

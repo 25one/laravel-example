@@ -11,7 +11,7 @@ class ReactDialog extends React.Component {
       this.handleQuestion = this.handleQuestion.bind(this);  
 
       this.state = {
-         api_token: window.token,
+         api_token: window.api_token,
 
          question: '',
          answer: '',
@@ -91,8 +91,8 @@ class ReactDialog extends React.Component {
                } else if ('message' in resp.response.data) {
                   Swal.fire({
                      icon: 'error',
-                     //text: resp.response.data.message,
-                     text: "There is something wrong. Please try again later.",
+                     text: resp.response.data.message,
+                     //text: "There is something wrong. Please try again later.",
                   }); 
                }             
             });
