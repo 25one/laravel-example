@@ -81,44 +81,29 @@ export default class ExecuteProjectDialog extends React.Component {
          await axios
          .post('/execute-prompt', {prompt: prompt.content})
             .then(function (resp) {
-               let errorPython = null;
+               //console.log(resp.response);
 
                if (Array.isArray(resp.data)) {
                   self.result = JSON.stringify(resp.data)
-               } else if (typeof resp.data === 'object' && resp.data !== null && 'errorPython' in resp.data) {
-                  errorPython = resp.data.errorPython.message;
                } else {
                   self.result = resp.data;
                }
 
                //console.log(self.result);
-               //console.log(errorPython);
 
-               if (errorPython) {
-                  self.setState({
-                     loader: false, 
-                     resultProject: '',
-                  });                  
-                  Swal.fire({
-                     icon: 'error',
-                     //text: errorPython,
-                     text: "There is something wrong. Please try again later.", 
-                  });
-               } else {
-                  self.setState({
-                     loader: false, 
-                     executablePrompt: '',
-                     resultProject: self.result                 
-                  });  
-               }              
+               self.setState({
+                  loader: false, 
+                  executablePrompt: '',
+                  resultProject: self.result                 
+               });
             })
             .catch(function (resp) {
                console.log(resp.response);
 
                Swal.fire({
                   icon: 'error',
-                  //text: resp.response.data.message,
-                  text: "There is something wrong. Please try again later.",
+                  text: resp.response.data.message,
+                  //text: "There is something wrong. Please try again later.",
                });
 
                self.props.modalClose();

@@ -31,10 +31,14 @@ try:
 
 except Exception as e:
     # Создаем словарь с данными об ошибке
+
+
     error_data = {
         "errorPython": {
-            "type": e.__class__.__name__,
-            "message": str(e)
+        #"data": {
+            #"type": e.__class__.__name__,
+            "message": str(e),
+            #"status": 500
         }
     }
     # Конвертируем в JSON

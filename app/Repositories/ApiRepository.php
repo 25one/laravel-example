@@ -40,17 +40,24 @@ class ApiRepository
      */
     public function chatQuestion($request, $userId)
     {
-        try {
-            $description = Description::where('user_id', $userId)
-                              ->first(); 
+        $description = Description::where('user_id', $userId)
+                            ->first(); 
 
+        if ($description) {                    
             $prompt  = str_replace('#chatprompt#', $request->prompt, $description->description); 
 
-            return $this->promptRepository->execute($prompt);
-        } catch (\Exception $e) {
-            return $e;
-        }  
-       }
+            $request->merge(['prompt' => $prompt]);
+
+            $this->promptRepository->type = 'chat';
+
+            return $this->promptRepository->execute($request);
+        } else {
+             return response()->json([ //!для js-catch
+                'message' => 'You must filled in the Description field on the Dashboard page AI-CRM Pilot!',
+                //'errors' => '500 Internal Server Error'
+             ], 500);
+        }
+    }
     
     /**
      * Prompt-execute.
@@ -59,20 +66,20 @@ class ApiRepository
      */
     public function promptExecute($request)
     {
-        try {
-            $prompt = Prompt::where('token', $request->token)
-                              ->firstOrFail(); 
- 
-            if ($request->prompt) {                  
-               $prompt  = str_replace('#apiprompt#', is_array($request->prompt) ? json_encode($request->prompt) : $request->prompt, $prompt->content); 
-            } else {
-               $prompt = $prompt->content;              
-            }
+        $prompt = Prompt::where('token', $request->token)
+                            ->firstOrFail(); 
 
-            return $this->promptRepository->execute($prompt);
-        } catch (\Exception $e) {
-            return $e;
-        }       
+        if ($request->prompt) {                  
+            $prompt  = str_replace('#apiprompt#', is_array($request->prompt) ? json_encode($request->prompt) : $request->prompt, $prompt->content); 
+        } else {
+            $prompt = $prompt->content;              
+        }
+
+        $request->merge(['prompt' => $prompt]);
+
+        $this->promptRepository->type = 'api';
+
+        return $this->promptRepository->execute($request);     
     }
 
     /**
@@ -82,29 +89,29 @@ class ApiRepository
      */
     public function projectExecute($request)
     {
-        try {
-            $project = Project::where('token', $request->token)
-                           ->with('prompts')
-                           ->firstOrFail();
+        $project = Project::where('token', $request->token)
+                        ->with('prompts')
+                        ->firstOrFail();
 
-            if (count($project->prompts)) {             
-                  foreach ($project->prompts as $key => $prompt) {
-                     if ($key == 0) {
-                        if ($request->prompt) $prompt = str_replace('#apiprompt#', is_array($request->prompt) ? json_encode($request->prompt) : $request->prompt, $prompt->content);
-                        else $prompt = $prompt->content;
-                     } else {
-                        $prompt = str_replace('#beforeprompt#', $result, $prompt->content);
-                     }
+        if (count($project->prompts)) {             
+            foreach ($project->prompts as $key => $prompt) {
+                if ($key == 0) {
+                    if ($request->prompt) $prompt = str_replace('#apiprompt#', is_array($request->prompt) ? json_encode($request->prompt) : $request->prompt, $prompt->content);
+                    else $prompt = $prompt->content;
+                } else {
+                    $prompt = str_replace('#beforeprompt#', $result, $prompt->content);
+                }
 
-                     $result = $this->promptRepository->execute($prompt);
-                  }
+                $request->merge(['prompt' => $prompt]);
 
-                  return $result;
-            } else {
-                  return null;
+                $this->promptRepository->type = 'api';
+
+                $result = $this->promptRepository->execute($request);
             }
-        } catch (\Exception $e) {
-            return $e;
-        }          
+
+            return $result;
+        } else {
+            return null;
+        }       
     }    
 }

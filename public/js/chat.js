@@ -40598,29 +40598,10 @@ var ReactDialog = /*#__PURE__*/function (_React$Component) {
       }).then(function (resp) {
         //console.log(resp.data);
 
-        var result = null;
-        var errorPython = null;
-        if (_typeof(resp.data) === 'object' && resp.data !== null && 'errorPython' in resp.data) {
-          errorPython = resp.data.errorPython.message;
-        } else {
-          result = resp.data;
-        }
-        if (errorPython) {
-          self.setState({
-            loader: false,
-            resultPrompt: ''
-          });
-          sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().fire({
-            icon: 'error',
-            //text: errorPython,
-            text: "There is something wrong. Please try again later."
-          });
-        } else {
-          self.setState({
-            loader: false,
-            answer: result
-          });
-        }
+        self.setState({
+          loader: false,
+          answer: resp.data
+        });
       })["catch"](function (resp) {
         console.log(resp.response);
         self.setState({

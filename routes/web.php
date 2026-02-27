@@ -28,10 +28,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/linkemailverification/{again}', [App\Http\Controllers\Auth\RegisterController::class, 'sendLinkEmailVerification'])->name('linkemailverification');
 
-    Route::get('/link-change-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'linkChangePassword'])->name('link-change-password');
-    Route::post('/change-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'changePassword'])->name('change-password');
+    Route::get('/get-data-user', [App\Http\Controllers\UserController::class, 'getData'])->name('get-data-user'); 
 
-    Route::post('/remove-account', [App\Http\Controllers\UserController::class, 'removeAccount'])->name('remove-account');    
+    Route::post('/save-apikey-user', [App\Http\Controllers\UserController::class, 'saveApikey'])->name('save-apikey-user');    
+    Route::post('/remove-apikey-user', [App\Http\Controllers\UserController::class, 'removeApikey'])->name('remove-apikey-user');     
+
+    Route::post('/change-password-user', [App\Http\Controllers\UserController::class, 'changePassword'])->name('change-password-user');
+
+    Route::post('/remove-account', [App\Http\Controllers\UserController::class, 'removeAccount'])->name('remove-account');      
 
     Route::middleware('verified')->group(function () {
         Route::get('/list-projects', [App\Http\Controllers\DashboardController::class, 'listProjects'])->name('list-projects');
@@ -40,7 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/project/{idProject}/list-prompts', [App\Http\Controllers\DashboardController::class, 'listPrompts'])->name('list-prompts');
         Route::resource('prompts', 'App\Http\Controllers\PromptController');
         Route::post('/change-active-prompt', [App\Http\Controllers\PromptController::class, 'changeActivePrompt'])->name('change-active-prompt');
-        Route::post('/execute-prompt', [App\Http\Controllers\PromptController::class, 'executePrompt'])->name('execute-prompt');    
+        Route::post('/execute-prompt', [App\Http\Controllers\PromptController::class, 'executePrompt'])->name('execute-prompt')->middleware('keyreceived');  
 
         Route::get('/description', [App\Http\Controllers\DashboardController::class, 'description'])->name('description');
         Route::resource('descriptions', 'App\Http\Controllers\DescriptionController');

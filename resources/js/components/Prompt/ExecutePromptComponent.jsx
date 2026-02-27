@@ -61,44 +61,33 @@ export default class ExecutePromptDialog extends React.Component {
          axios
          .post('/execute-prompt', {prompt: this.state.contentPrompt})
             .then(function (resp) {
+               //console.log(resp.data);
+
                let result = null;
-               let errorPython = null;
 
                if (Array.isArray(resp.data)) {
                   result = JSON.stringify(resp.data)
-               } else if (typeof resp.data === 'object' && resp.data !== null && 'errorPython' in resp.data) {
-                  errorPython = resp.data.errorPython.message;
                } else {
                   result = resp.data;
-               }
-
-               //console.log(result);
-               //console.log(errorPython);
-
-               if (errorPython) {
-                  self.setState({
-                     loader: false, 
-                     resultPrompt: '',
-                  });                  
-                  Swal.fire({
-                     icon: 'error',
-                     //text: errorPython,
-                     text: "There is something wrong. Please try again later.",
-                  });
-               } else {
-                  self.setState({
-                     loader: false, 
-                     resultPrompt: result,
-                  });  
                }             
+
+               self.setState({
+                  loader: false, 
+                  resultPrompt: result,
+               });
             })
             .catch(function (resp) {
                console.log(resp.response);
 
+               self.setState({
+                  loader: false, 
+                  resultPrompt: '',
+               }); 
+               
                Swal.fire({
                   icon: 'error',
-                  //text: resp.response.data.message,
-                  text: "There is something wrong. Please try again later.",
+                  text: resp.response.data.message,
+                  //text: "There is something wrong. Please try again later.",
                });
             });
 

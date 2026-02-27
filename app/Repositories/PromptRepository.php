@@ -25,6 +25,8 @@ class PromptRepository
     protected $modelStatistic;
     protected $modelRepository;
 
+    public $type = null;
+
     /**
      * Create a new PromptRepository instance.
      *
@@ -98,27 +100,26 @@ class PromptRepository
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function execute($prompt)
+    public function execute($request)
     {       
          $selectedModel = $this->modelRepository->getSelectedModel();
 
          $classAI = 'App\Services\AI\\' . $selectedModel->model;
 
-         try {
-            $llm = new $classAI();
+         $llm = new $classAI($request->api_key);
 
-            $llm->variantAI = $selectedModel->model;
-            $llm->variantModel = $selectedModel->bottommodels->first()->model;
-            $llm->prompt = $prompt;
+         //$llm->variantAI = $selectedModel->model; //...not my Setting here...
+         $llm->variantAI = $request->variantAI;
+         $llm->variantModel = $selectedModel->bottommodels->first()->model; //...my Setting here...
+         $llm->prompt = $request->prompt;
 
-            $result = $llm->funcGet(); 
+         //return $request->api_key; //...then...
 
-            $this->statistic($prompt, $result);
+         $result = $llm->funcGet(); 
 
-            return $result;
-         } catch (\Exception $e) {
-            return $e->getMessage();
-         }
+         $this->statistic($request->prompt, $result);
+
+         return $result;
     } 
     
     /**
@@ -131,10 +132,8 @@ class PromptRepository
        $this->modelStatistic->user_id = auth()->user()->id;
        $this->modelStatistic->user_email = auth()->user()->email;
        $this->modelStatistic->prompt_content = $prompt;
-
-       if (is_object($result) && property_exists($result, 'errorPython')) {
-          $this->modelStatistic->prompt_error = $result->errorPython;
-       }
+       $this->modelStatistic->prompt_type = $this->type;
+       $this->modelStatistic->prompt_result = $result;
 
        $this->modelStatistic->save();
     }     

@@ -29,6 +29,7 @@ class ApiController extends Controller
      */
     public function widgetChatQuestion(WidgetChatRequest $request)
     {
+        //ajax - not try catch -> js-catch
         return $this->apiRepository->chatQuestion($request, \Auth::id());
     }
 
@@ -38,8 +39,18 @@ class ApiController extends Controller
      */
     public function apiPromptExecute(ApiPromptRequest $request)
     {        
-        if ($request->type == 'prompt') return $this->apiRepository->promptExecute($request); //$request->type; $request->token; $request->prompt;       
-        if ($request->type == 'project') return $this->apiRepository->projectExecute($request);
+        if ($request->type == 'prompt') 
+            try { //not ajax
+                return $this->apiRepository->promptExecute($request); //$request->type; $request->token; $request->prompt; 
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            } 
+        if ($request->type == 'project') 
+            try {
+                return $this->apiRepository->projectExecute($request);
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }             
     }    
 
 }

@@ -1,0 +1,11 @@
+﻿.user-profile-check {
+color: green;
+font-size: 2em;  
+cursor: pointer; 
+}
+
+.user-profile-trash {
+color: red;
+font-size: 2em;  
+cursor: pointer; 
+}

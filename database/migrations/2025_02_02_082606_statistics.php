@@ -17,8 +17,9 @@ class Statistics extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
             $table->string('user_email');
+            $table->string('prompt_type', 10)->nullable()->default('crm');            
             $table->longText('prompt_content');
-            $table->string('prompt_error')->nullable();           
+            $table->longText('prompt_result')->nullable();           
             $table->timestamps();                              
         }); 
     }

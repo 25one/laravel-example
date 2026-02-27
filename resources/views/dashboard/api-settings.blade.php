@@ -12,6 +12,20 @@
                         <div class="col-lg-12">
                             <h3 class="page-header">Manual and API Settings</h3>
                             <br>
+
+                            @if (! count(auth()->user()->keysActive))
+                            @if (auth()->user()->demo_count)    
+                            <p>
+                            You have <strong class="text-success">{{auth()->user()->demo_count}}</strong> demo requests. After using them, you need to add an <strong>API KEY</strong> to the AI ​​model in your profile to continue working..
+                            </p>
+                            @else
+                            <p>
+                            You <strong class="text-danger">no longer</strong> have demo requests. You need to add an <strong>API KEY</strong> to the AI ​​model in your profile to continue working.  
+                            </p>
+                            @endif
+                            @endif
+                            <hr>
+
                             <p>
                                 Your <strong>user API token</strong> (field api_token in request) is
                                 <a href="#" id="test" class="form-control btn btn-link" title="click to copy to clipboard" onclick="event.preventDefault();" data-clipboard-text="{{Auth::user()->api_token}}">{{Auth::user()->api_token}}</a>

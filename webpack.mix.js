@@ -25,4 +25,4 @@ mix.js('resources/js/description.js', 'public/js');
 
 mix.js('resources/js/chat.js', 'public/js');
 
-mix.js('resources/js/remove.js', 'public/js');
+mix.js('resources/js/profile.js', 'public/js');

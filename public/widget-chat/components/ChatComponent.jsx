@@ -43,31 +43,10 @@ class ReactDialog extends React.Component {
             .then(function (resp) {
                //console.log(resp.data);
 
-               let result = null;
-               let errorPython = null;
-
-               if (typeof resp.data === 'object' && resp.data !== null && 'errorPython' in resp.data) {
-                  errorPython = resp.data.errorPython.message;
-               } else {
-                  result = resp.data;
-               }
-
-               if (errorPython) {
-                  self.setState({
-                     loader: false, 
-                     resultPrompt: '',
-                  });                  
-                  Swal.fire({
-                     icon: 'error',
-                     //text: errorPython,
-                     text: "There is something wrong. Please try again later.",
-                  });
-               } else {
-                     self.setState({
-                        loader: false,
-                        answer: result, 
-                     }); 
-               }                            
+               self.setState({
+                  loader: false,
+                  answer: resp.data, 
+               });                            
             })
             .catch(function (resp) {
                console.log(resp.response);

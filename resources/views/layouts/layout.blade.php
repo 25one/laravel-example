@@ -5,11 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>AI-CRM Pilot - use AI models (ChatGPT, Gemini) on your website (projects-prompts, AI chat-bot)</title>
+        <title>AI-CRM Pilot - нow businesses can use AI models in their daily work --- как бизнесу использовать AI-модели в своей повседневной практике</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Bootstrap icons-->
+        <!-- bi bi -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
+        <!-- zmdi zmdi -->
+        <link href="{{ asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -57,16 +60,13 @@
                                                     <strong @verified class="text-success" @else class="text-primary" @endverified>Dashboard</strong>
                                                 </a>
                                                 {{-- @endverified --}}
-                                                <a class="dropdown-item" href="{{ route('link-change-password') }}">
-                                                    Change password
-                                                </a>
+                                                <a class="dropdown-item user-profile" href="#">
+                                                </a> 
                                                 @admin
                                                 <a class="dropdown-item" href="{{ route('settings') }}">
                                                     System settings
                                                 </a>  
-                                                @endadmin 
-                                                <a class="dropdown-item remove-account" href="#">
-                                                </a>                                                                                           
+                                                @endadmin                                                                                          
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                                     onclick="event.preventDefault();
                                                                     document.getElementById('logout-form').submit();">
@@ -91,10 +91,6 @@
                                         </div>
                                         <div class="account-dropdown js-dropdown">
                                             <div class="account-dropdown__body">
-                                                <div class="account-dropdown__item">
-                                                    <a href="{{route('link-change-password')}}">
-                                                        <i class="zmdi zmdi-account"></i>Change password</a>
-                                                </div>
                                                 @if (auth()->user()->role === 'admin')
                                                 <div class="account-dropdown__item">
                                                     <a href="{{route('settings')}}">
@@ -131,6 +127,7 @@
             </div>
         </nav>
 
+      @auth  
       @if (session('notEmailVerified'))
           <div class="alert alert-danger" role="alert">
               {{ session('notEmailVerified') }} <a href="{{route('linkemailverification', [true])}}">send link to your email again</a>
@@ -148,6 +145,17 @@
               {{ session('verifiedRequiredNotEmail') }}
           </div>
       @endif       
+
+      @verified
+      @if (! count(auth()->user()->keysActive))
+      @if (! auth()->user()->demo_count)
+          <div class="alert alert-danger" role="alert">
+              You have run out of demo requests. Add api_key to your profile to access the model.
+          </div>      
+      @endif
+      @endif
+      @endverified
+      @endauth
 
         <!-- Masthead-->
         <header class="masthead">
@@ -250,7 +258,9 @@
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <!-- <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> -->
 
-        <script src="{{ mix('js/remove.js') }}"></script>
+        @auth
+        <script src="{{ mix('js/profile.js') }}"></script>
+        @endauth
 
         @yield('js')
     </body>

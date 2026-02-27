@@ -18,6 +18,9 @@ class ListProjectsDialog extends React.Component {
 
       this.reset = this.reset.bind(this);
 
+      this.countKeysActive = window.countKeysActive;
+      this.demoCount = window.demoCount;
+
       this.state = {
          variant: null,
          id: null,
@@ -63,7 +66,12 @@ class ListProjectsDialog extends React.Component {
    }
 
    componentDidMount() {
-      //...        
+      if (! this.countKeysActive && ! this.demoCount) {
+         Swal.fire({
+            icon: 'error',
+            text: 'You have run out of demo requests. Add api_key to your profile to access the model.',
+         }); 
+      }        
    }
   
    showProject(idProject) {

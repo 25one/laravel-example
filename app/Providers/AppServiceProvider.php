@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::if('verified', function () {
-            return auth()->user()->email_verified_at;
+            return auth()->user()->email_verified_at !== null;
         });
     }
 }

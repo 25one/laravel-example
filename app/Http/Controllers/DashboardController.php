@@ -50,7 +50,7 @@ class DashboardController extends Controller
     {
         $projects = $this->projectRepository->getProjects();
 
-        return view('dashboard.list-projects', ['projects' => $projects]);
+        return view('dashboard.list-projects', ['projects' => $projects, 'countKeysActive' => count(auth()->user()->keysActive), 'demoCount' => auth()->user()->demo_count]);
     }
 
     /**

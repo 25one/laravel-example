@@ -15,6 +15,10 @@
     <!-- Fontfaces CSS-->
     <link href="{{ asset('css/font-face.css') }}" rel="stylesheet" media="all">
     <link href="{{ asset('vendor/fontawesome-7.1.0/css/all.min.css') }}" rel="stylesheet" media="all">
+
+    <!-- bi bi -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
+    <!-- zmdi zmdi -->
     <link href="{{ asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
 
     <!-- Bootstrap CSS-->
@@ -434,19 +438,15 @@
                                             -->
                                             <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
-                                                    <a href="{{route('link-change-password')}}">
-                                                        <i class="zmdi zmdi-account"></i>Change password</a>
-                                                </div>
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-account"></i><span class="user-profile"></span></a>
+                                                </div>                                                 
                                                 @if (auth()->user()->role === 'admin')
                                                 <div class="account-dropdown__item">
                                                     <a href="{{route('settings')}}">
                                                         <i class="zmdi zmdi-settings"></i>System settings</a>
                                                 </div>
-                                                @endif
-                                                <div class="account-dropdown__item">
-                                                    <a href="#">
-                                                        <i class="zmdi zmdi-delete text-danger"></i><span class="remove-account"></span></a>
-                                                </div>                                                
+                                                @endif                                            
                                                 <!--
                                                 <div class="account-dropdown__item">
                                                     <a href="#">
@@ -506,7 +506,7 @@
     <script src="{{ asset('js/aos.js') }}"></script>
     <script src="{{ asset('js/modern-plugins.js') }}"></script>
 
-    <script src="{{ mix('js/remove.js') }}"></script>
+    <script src="{{ mix('js/profile.js') }}"></script>
 
     @yield('js')
 </body>

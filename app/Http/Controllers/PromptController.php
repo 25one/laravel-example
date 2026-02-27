@@ -101,6 +101,8 @@ class PromptController extends Controller
      */
     public function executePrompt(Request $request)
     {
-       return $this->promptRepository->execute($request->prompt);
+       $this->promptRepository->type = 'crm';
+
+       return $this->promptRepository->execute($request);     
     }     
 }

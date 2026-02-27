@@ -8,6 +8,8 @@
 
     <script>
         window.projects = @json($projects);
+        window.countKeysActive = @json($countKeysActive);
+        window.demoCount = @json($demoCount);
     </script> 
 
     <div class="list-projects">
